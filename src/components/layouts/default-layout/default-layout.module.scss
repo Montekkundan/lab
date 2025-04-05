@@ -1,0 +1,33 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.content {
+  max-width: 1200px;
+  width: 100%;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.bg-dots {
+  background-color: #111;
+  background-image: radial-gradient(#333 1px, transparent 0);
+  background-size: 20px 20px;
+}
+
+.bg-dots_white {
+  background-color: white;
+  background-image: radial-gradient(#ccc 1px, transparent 0);
+  background-size: 20px 20px;
+}
+
+.bg-none {
+  background: transparent;
+}
