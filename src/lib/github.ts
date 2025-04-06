@@ -8,8 +8,41 @@ const client = new GraphQLClient('https://api.github.com/graphql', {
 })
 
 const ORG = 'montekkundan'
-const REPO = 'montek-lab' // Updated to match your repository name
-const BRANCH = 'main' // Updated to main since you're on main branch
+const REPO = 'lab'
+const BRANCH = 'main'
+
+interface GitHubUser {
+  id: string
+  url: string
+  name: string
+  avatarUrl: string
+  email: string
+  company: string
+}
+
+interface GitHubCommitAuthor {
+  user: GitHubUser
+}
+
+interface GitHubCommitNode {
+  author: GitHubCommitAuthor
+}
+
+interface GitHubCommitHistory {
+  nodes: GitHubCommitNode[]
+}
+
+interface GitHubObject {
+  history: GitHubCommitHistory
+}
+
+interface GitHubRepository {
+  object: GitHubObject
+}
+
+interface GitHubResponse {
+  repository?: GitHubRepository
+}
 
 export const getFileContributors = async (file: string) => {
   try {
@@ -38,7 +71,7 @@ export const getFileContributors = async (file: string) => {
       }
     `
 
-    const data = await client.request(query)
+    const data = await client.request<GitHubResponse>(query)
     
     // Check if all required properties exist
     if (!data?.repository?.object?.history?.nodes) {
@@ -48,15 +81,15 @@ export const getFileContributors = async (file: string) => {
 
     // Filter out nodes that don't have valid user data
     const validNodes = data.repository.object.history.nodes.filter(
-      (n: any) => n?.author?.user?.id
+      (n) => n?.author?.user?.id
     )
 
     const uniqueContributors = uniqBy(
       validNodes,
-      (n: any) => {
+      (n) => {
         return n.author.user.id
       }
-    ).map((n: any) => n.author.user)
+    ).map((n) => n.author.user)
 
     return uniqueContributors
   } catch (error) {

@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { githubUrl, isClient } from '@/lib/constants'
+import experimentsData from '../../public/experiments.json';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -41,13 +42,49 @@ export const getExampleGithubUrl = (filename: string) => {
   return url;
 }
 
-export const getExamplePath = (filename: string) => {
-  const path = `src/experiments/${filename}`;
-  console.log(`Generated example path: ${path}`);
-  return path;
+interface ExperimentData {
+  filename: string;
+  title: string;
+  description: string;
+  tags?: string[];
+  background?: string;
+  href: string;
 }
 
-// Detects if the parameter is a react component and returns a boolean
+export const getExamplePath = (filename: string) => {
+  // Ensure the filename includes the extension
+  const basePath = `src/experiments/${filename}`;
+  console.log(`Base example path: ${basePath}`);
+  
+  try {
+    // Get matching experiment from experiments.json
+    const matchingExperiment = (experimentsData as ExperimentData[]).find((exp) => {
+      // Match by href (most reliable way)
+      if (exp.href === `/experiments/${filename}`) {
+        return true;
+      }
+      
+      if (exp.filename.includes('/')) {
+        const experimentBaseName = exp.filename.split('/')[0];
+        return experimentBaseName === filename;
+      }
+      
+      const experimentBaseName = exp.filename.split('.')[0];
+      return experimentBaseName === filename;
+    });
+    
+    if (matchingExperiment) {
+      const completePath = `src/experiments/${matchingExperiment.filename}`;
+      console.log(`Found matching experiment: ${matchingExperiment.filename}`);
+      return completePath;
+    }
+  } catch (error) {
+    console.error("Error accessing experiments data:", error);
+  }
+  
+  return basePath;
+}
+
 export const isReactComponent = (
   param: unknown
 ): param is React.ComponentType => {
