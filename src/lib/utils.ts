@@ -35,11 +35,17 @@ export const getSizes = (
   return sizes.join(', ')
 }
 
-export const getExampleGithubUrl = (filename: string) =>
-  `${githubUrl}/tree/master/${getExamplePath(filename)}`
+export const getExampleGithubUrl = (filename: string) => {
+  const url = `${githubUrl}/tree/master/${getExamplePath(filename)}`;
+  console.log(`Generated GitHub URL: ${url}`);
+  return url;
+}
 
-export const getExamplePath = (filename: string) =>
-  `src/experiments/${filename}`
+export const getExamplePath = (filename: string) => {
+  const path = `src/experiments/${filename}`;
+  console.log(`Generated example path: ${path}`);
+  return path;
+}
 
 // Detects if the parameter is a react component and returns a boolean
 export const isReactComponent = (

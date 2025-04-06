@@ -1,17 +1,49 @@
 import { cache } from 'react'
-import { siteOrigin, isDev } from './constants'
+import { isDev } from './constants'
 import { getFileContributors } from './github'
 import { getExamplePath } from './utils'
 
-// Import experiments data from JSON file
-import experimentsData from '../../public/experiments.json'
+// Import the raw experiments data
+import rawExperimentsData from '../../public/experiments.json'
+
+interface Contributor {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+  contributions: number;
+}
+
+interface ExperimentData {
+  filename: string;
+  title?: string;
+  description?: string;
+  tags?: string[];
+  href?: string;
+  background?: string;
+  og?: string;
+  number?: number;
+  contributors?: Contributor[];
+}
+
+// Define the type for the raw JSON data that has at least filename
+interface RawExperimentData {
+  filename: string;
+  title?: string;
+  description?: string;
+  tags?: string[];
+  href?: string;
+  background?: string;
+  og?: string;
+}
+
+// Cast the imported JSON data to our interface
+const experimentsData = rawExperimentsData as RawExperimentData[];
 
 /**
  * Gets all experiment slugs
  * This function returns a cached list of experiment slugs
  */
-export const getAllExperimentSlugs = cache(async () => {
-  // Get experiments from JSON file
+export const getAllExperimentSlugs = cache(() => {
   const experiments = experimentsData.map(exp => exp.filename)
   return experiments
 })
@@ -22,14 +54,14 @@ export const getAllExperimentSlugs = cache(async () => {
  */
 export const getAllExperiments = cache(async () => {
   // Start with experiments from JSON file
-  let experiments = experimentsData.map(exp => ({
+  let experiments: ExperimentData[] = experimentsData.map(exp => ({
     filename: exp.filename,
     title: exp.title || formatExperimentTitle(exp.filename),
     description: exp.description || '',
     tags: exp.tags || [],
     href: exp.href || `/experiments/${exp.filename.replace(/\.[^/.]+$/, '')}`,
     background: exp.background || 'dots',
-    og: exp.og || ''
+    og: exp.og || '' // Provide default empty string if og is missing
   }))
 
   // Sort experiments (newest first based on number in filename)

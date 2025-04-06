@@ -10,12 +10,19 @@ type Module<P> = {
 }
 
 interface ExtendedFC<P = Record<string, unknown>> extends React.FC<P> {
-  Layout?: React.FC<any>
+  Layout?: React.FC<{
+    children: React.ReactNode;
+    slug: string;
+    title?: string;
+    description?: string;
+    background?: 'white' | 'dots' | 'dots_white' | 'none';
+  }>
   getLayout?: GetLayoutFn<P>
   Title?: string
   Description?: string
   Tags?: string[]
   background?: 'white' | 'dots' | 'dots_white' | 'none'
+  og?: string
 }
 
 type Component<P = Record<string, unknown>> = ExtendedFC<P>
@@ -36,14 +43,12 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
   }
 
   if (Component?.Layout) {
-    // Check if we're using R3F layout
     if (Component.Layout === R3FCanvasLayout) {
-      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: string, slug: string, background?: string }> = ({ Component, title, description, slug, background }) => (
+      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: string, slug: string, background?: string }> = ({ Component, title, description, slug }) => (
         <R3FCanvasLayout 
           slug={slug} 
           title={title} 
-          description={description} 
-          background={background || Component.background}
+          description={description}
         >
           <Component />
         </R3FCanvasLayout>
@@ -51,18 +56,22 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
       R3FLayoutWrapper.displayName = 'R3FLayoutWrapper'
       return R3FLayoutWrapper
     }
-    
-    // Generic layout wrapper for any other layout
-    const LayoutWrapper: React.FC<{ Component: Component, title?: string, description?: string, slug: string, background?: string }> = ({ Component, title, description, slug, background }) => (
-      <Component.Layout 
-        slug={slug} 
-        title={title} 
-        description={description} 
-        background={background || Component.background}
-      >
-        <Component />
-      </Component.Layout>
-    )
+  
+      const LayoutWrapper: React.FC<{ Component: Component, title?: string, description?: string, slug: string, background?: 'white' | 'dots' | 'dots_white' | 'none' }> = ({ Component, title, description, slug, background }) => {
+        const Layout = Component.Layout;
+        if (!Layout) return null;
+        
+        return (
+          <Layout 
+            slug={slug} 
+            title={title} 
+            description={description} 
+            background={background || Component.background}
+          >
+            <Component />
+          </Layout>
+        );
+      }
     LayoutWrapper.displayName = 'LayoutWrapper'
     return LayoutWrapper
   }
@@ -106,7 +115,7 @@ export default function ExperimentPage({ params }: { params: Promise<{ slug: str
   if (error) {
     return <div className="p-8 text-center">
       <h1 className="text-3xl font-bold mb-4">Experiment Not Found</h1>
-      <p>Sorry, the experiment "{slug}" could not be loaded.</p>
+      <p>Sorry, the experiment &quot;{slug}&quot; could not be loaded.</p>
     </div>
   }
 
