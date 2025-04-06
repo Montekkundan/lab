@@ -1,17 +1,11 @@
 import { cache } from 'react'
 import { isDev } from './constants'
-import { getFileContributors } from './github'
+import { getFileContributors, GitHubUser } from './github'
 import { getExamplePath } from './utils'
 
-// Import the raw experiments data
 import rawExperimentsData from '../../public/experiments.json'
 
-interface Contributor {
-  login: string;
-  avatar_url: string;
-  html_url: string;
-  contributions: number;
-}
+type Contributor = GitHubUser;
 
 interface ExperimentData {
   filename: string;
@@ -25,7 +19,6 @@ interface ExperimentData {
   contributors?: Contributor[];
 }
 
-// Define the type for the raw JSON data that has at least filename
 interface RawExperimentData {
   filename: string;
   title?: string;
@@ -36,7 +29,6 @@ interface RawExperimentData {
   og?: string;
 }
 
-// Cast the imported JSON data to our interface
 const experimentsData = rawExperimentsData as RawExperimentData[];
 
 /**
@@ -70,7 +62,6 @@ export const getAllExperiments = cache(async () => {
   )
 
   if (!isDev) {
-    // Filter private experiments
     experiments = experiments.filter(e => !e.tags?.includes('private'))
   }
 

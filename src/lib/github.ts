@@ -11,7 +11,7 @@ const ORG = 'montekkundan'
 const REPO = 'lab'
 const BRANCH = 'main'
 
-interface GitHubUser {
+export interface GitHubUser {
   id: string
   url: string
   name: string
