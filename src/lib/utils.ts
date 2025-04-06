@@ -38,7 +38,6 @@ export const getSizes = (
 
 export const getExampleGithubUrl = (filename: string) => {
   const url = `${githubUrl}/tree/master/${getExamplePath(filename)}`;
-  console.log(`Generated GitHub URL: ${url}`);
   return url;
 }
 
@@ -52,14 +51,10 @@ interface ExperimentData {
 }
 
 export const getExamplePath = (filename: string) => {
-  // Ensure the filename includes the extension
   const basePath = `src/experiments/${filename}`;
-  console.log(`Base example path: ${basePath}`);
   
   try {
-    // Get matching experiment from experiments.json
     const matchingExperiment = (experimentsData as ExperimentData[]).find((exp) => {
-      // Match by href (most reliable way)
       if (exp.href === `/experiments/${filename}`) {
         return true;
       }
@@ -75,7 +70,6 @@ export const getExamplePath = (filename: string) => {
     
     if (matchingExperiment) {
       const completePath = `src/experiments/${matchingExperiment.filename}`;
-      console.log(`Found matching experiment: ${matchingExperiment.filename}`);
       return completePath;
     }
   } catch (error) {
