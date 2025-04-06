@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { useMedia } from '@/hooks/use-media'
 import { defaultMeta, siteOrigin } from '@/lib/constants'
-import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 type BasicMeta = {
   title?: string
@@ -21,14 +21,14 @@ type BasicMeta = {
 export type MetaProps = BasicMeta
 
 export const Meta = (props: MetaProps) => {
-  const router = useRouter()
+  const pathname = usePathname()
   const isDark = useMedia('(prefers-color-scheme: dark)')
 
   const resolvedMetadata = React.useMemo(() => {
     const data = {
       title: props.title ?? defaultMeta.title,
       description: props.description ?? defaultMeta.description,
-      canonical: props.cannonical ?? `${siteOrigin}${router.pathname}`,
+      canonical: props.cannonical ?? `${siteOrigin}${pathname}`,
       ogImage: {
         url: props.ogImage ?? defaultMeta.ogImage,
         alt: props.title ?? defaultMeta.title,
@@ -53,7 +53,7 @@ export const Meta = (props: MetaProps) => {
     }
 
     return data
-  }, [props, router.pathname])
+  }, [props, pathname])
 
   return (
     <>

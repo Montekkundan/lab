@@ -33,6 +33,9 @@
     "filename": "1.cube.tsx",
     "title": "Three.js Cube",
     "description": "This is just a cube",
+    "tags": [
+      "r3f"
+    ],
     "href": "/experiments/1.cube"
   }
 ]

@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { use } from 'react'
 import { R3FCanvasLayout } from '@/components/layouts/r3f-layput'
 import { DefaultLayout } from '@/components/layouts/default-layout'
+import { use } from 'react'
 
 type Module<P> = {
   default: P
@@ -76,7 +76,6 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
     return LayoutWrapper
   }
 
-  // Default layout for React components
   const DefaultReactLayout: React.FC<{ Component: Component, title?: string, description?: string, slug: string }> = ({ Component, title, description, slug }) => (
     <DefaultLayout slug={slug} title={title} description={description}>
       <Component />
@@ -86,11 +85,8 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
   return DefaultReactLayout
 }
 
-// Client-side experiment loader
-export default function ExperimentPage({ params }: { params: Promise<{ slug: string }> | { slug: string } }) {
-  // Unwrap the params with React.use() to handle both Promise and direct access cases
-  const unwrappedParams = 'then' in params ? use(params) : params
-  const { slug } = unwrappedParams
+export default function ExperimentPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params)
   const [Component, setComponent] = useState<Module<Component>>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
