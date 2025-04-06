@@ -1,26 +1,38 @@
 [
   {
+    "filename": "5.junior-dev/index.jsx",
+    "title": "Junior Dev",
+    "description": "I am now a junior developer!",
+    "tags": [
+      "r3f"
+    ],
+    "href": "/experiments/5.junior-dev"
+  },
+  {
     "filename": "2.cube.tsx",
-    "title": "Three.js Cube.",
-    "href": "/experiments/2.cube.tsx",
-    "tags": [],
-    "number": 3,
-    "contributors": []
+    "title": "Three.js Cube",
+    "description": "This is just a cube",
+    "background": "dots",
+    "href": "/experiments/2.cube"
   },
   {
-    "filename": "1.html-test.tsx",
-    "title": "Html test.",
-    "href": "/experiments/1.html-test.tsx",
-    "tags": [],
-    "number": 2,
-    "contributors": []
+    "filename": "3.shared-layout/index.js",
+    "title": "Shared layout",
+    "tags": [
+      "framer motion",
+      "animation"
+    ],
+    "href": "/experiments/3.shared-layout"
   },
   {
-    "filename": "1.html-test",
-    "title": "Html test.",
-    "href": "/experiments/1.html-test",
-    "tags": [],
-    "number": 1,
-    "contributors": []
+    "filename": "6.shadcn-test/index.tsx",
+    "title": "Shadcn Test",
+    "description": "Testing Shadcn UI components",
+    "tags": [
+      "ui",
+      "shadcn"
+    ],
+    "background": "dots",
+    "href": "/experiments/6.shadcn-test"
   }
 ]
