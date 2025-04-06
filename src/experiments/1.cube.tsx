@@ -1,11 +1,21 @@
 import { Box } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { FC, useRef } from 'react'
+import { Mesh } from 'three'
 
-import { R3FCanvasLayout } from '../components/layouts/r3f-layput'
+import { R3FCanvasLayout, R3FCanvasLayoutProps } from '../components/layouts/r3f-layput'
 
-const Cube: FC = () => {
-  const boxRef = useRef(null)
+// Custom type for components with layout and metadata
+type ExperimentComponent<P = object> = FC<P> & {
+  Layout?: FC<R3FCanvasLayoutProps>;
+  Title?: string;
+  Description?: string;
+  background?: string;
+  Tags?: string[];
+}
+
+const Cube: ExperimentComponent = () => {
+  const boxRef = useRef<Mesh>(null)
 
   useFrame(() => {
     if (boxRef.current) {
@@ -25,6 +35,6 @@ Cube.Layout = R3FCanvasLayout
 Cube.Title = 'Three.js Cube'
 Cube.Description =
   'This is just a cube'
-Cube.background = 'dots'
+Cube.Tags = ['r3f'];
 
 export default Cube

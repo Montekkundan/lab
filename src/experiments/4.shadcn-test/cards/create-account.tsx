@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label"
 
 export function DemoCreateAccount() {
   return (
-    <Card>
+    <Card className="w-full md:w-1/2">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>

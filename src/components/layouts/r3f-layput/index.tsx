@@ -5,7 +5,7 @@ import { FC, ReactNode } from 'react'
 import { NavigationLayout, NavigationLayoutProps } from '../navigation-layout'
 import s from './r3f-canvas-layout.module.scss'
 
-type R3FCanvasLayoutProps = NavigationLayoutProps & {
+export type R3FCanvasLayoutProps = NavigationLayoutProps & {
   htmlChildren?: ReactNode
 } & CanvasProps
 
