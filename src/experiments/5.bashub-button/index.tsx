@@ -44,5 +44,6 @@ BasehubButton.Title = 'Bashub Button';
 BasehubButton.Description = 'Built with Bashub Button';
 BasehubButton.Tags = ['ui'];
 BasehubButton.background = 'dots';
+BasehubButton.og = '/ogs/basehub-button.png';
 
 export default BasehubButton;
