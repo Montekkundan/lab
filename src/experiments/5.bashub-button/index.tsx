@@ -1,7 +1,9 @@
 import React from 'react'
 import { DefaultLayout } from '../../components/layouts/default-layout';
 import './index.styles.css'
+import { BasehubIcon } from './icon';
 
+// reference https://codepen.io/Petr-Knoll/pen/qEBWjRV
 function BasehubButton() {
     return (
         <>
@@ -9,19 +11,21 @@ function BasehubButton() {
                 <button className='basehub-button'>
                     <div className="button-outer">
                         <div className="button-inner">
-                            <span>Build with Basehub</span>
+                            <span>Built with Basehub</span>
+                            <span>
+                                <BasehubIcon />
+                            </span>
                         </div>
                     </div>
                 </button>
             </div>
-
         </>
     )
 }
 
 BasehubButton.Layout = DefaultLayout;
 BasehubButton.Title = 'Bashub Button';
-BasehubButton.Description = 'Build with Bashub Button';
+BasehubButton.Description = 'Built with Bashub Button';
 BasehubButton.Tags = ['ui'];
 BasehubButton.background = 'dots';
 
