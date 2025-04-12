@@ -34,6 +34,6 @@ ShadcnTest.Layout = DefaultLayout;
 ShadcnTest.Title = 'Shadcn Test';
 ShadcnTest.Description = 'Testing Shadcn UI components';
 ShadcnTest.Tags = ['ui', 'shadcn'];
-ShadcnTest.background = 'dots'; // Changed from 'white' to 'dots' to match dark theme
+ShadcnTest.background = 'dots';
 
 export default ShadcnTest;

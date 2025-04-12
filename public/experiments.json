@@ -37,5 +37,15 @@
       "r3f"
     ],
     "href": "/experiments/1.cube"
+  },
+  {
+    "filename": "5.bashub-button/index.tsx",
+    "title": "Bashub Button",
+    "description": "Build with Bashub Button",
+    "tags": [
+      "ui"
+    ],
+    "background": "dots",
+    "href": "/experiments/5.bashub-button"
   }
 ]
