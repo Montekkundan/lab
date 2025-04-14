@@ -23,6 +23,7 @@ interface ExtendedFC<P = Record<string, unknown>> extends React.FC<P> {
   Tags?: string[]
   background?: 'white' | 'dots' | 'dots_white' | 'none'
   og?: string
+  bg?: string
 }
 
 type Component<P = Record<string, unknown>> = ExtendedFC<P>
@@ -33,6 +34,7 @@ type GetLayoutFn<P = Record<string, unknown>> = React.FC<{
   description?: string
   slug: string
   background?: 'white' | 'dots' | 'dots_white' | 'none'
+  bg?: string
 }>
 
 const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
@@ -44,11 +46,12 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
 
   if (Component?.Layout) {
     if (Component.Layout === R3FCanvasLayout) {
-      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: string, slug: string, background?: string }> = ({ Component, title, description, slug }) => (
+      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: string, slug: string, background?: string, bg?: string }> = ({ Component, title, description, slug }) => (
         <R3FCanvasLayout 
           slug={slug} 
           title={title} 
           description={description}
+          bg={Component.bg}
         >
           <Component />
         </R3FCanvasLayout>

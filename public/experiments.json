@@ -30,6 +30,15 @@
     "href": "/experiments/3.junior-dev"
   },
   {
+    "filename": "6.grease_penciel/index.tsx",
+    "title": "Grease Pencil",
+    "description": "Testing grease pencil in three.js",
+    "tags": [
+      "r3f"
+    ],
+    "href": "/experiments/6.grease_penciel"
+  },
+  {
     "filename": "1.cube.tsx",
     "title": "Three.js Cube",
     "description": "This is just a cube",

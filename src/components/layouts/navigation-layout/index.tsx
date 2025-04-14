@@ -10,6 +10,7 @@ export type NavigationLayoutProps = {
   description?: string
   slug: string
   children: React.ReactNode
+  bg?: string
 }
 
 export const NavigationLayout: FC<NavigationLayoutProps> = ({
