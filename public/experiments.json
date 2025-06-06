@@ -21,6 +21,15 @@
     "href": "/experiments/4.shadcn-test"
   },
   {
+    "filename": "7.Chai/index.jsx",
+    "title": "Chai",
+    "description": "Chai",
+    "tags": [
+      "r3f"
+    ],
+    "href": "/experiments/7.Chai"
+  },
+  {
     "filename": "3.junior-dev/index.jsx",
     "title": "Junior Dev",
     "description": "I am now a junior developer!",
@@ -46,6 +55,15 @@
       "r3f"
     ],
     "href": "/experiments/1.cube"
+  },
+  {
+    "filename": "7.three-keyboard/index.tsx",
+    "title": "Three Keyboard",
+    "description": "Testing keyboard import in three.js",
+    "tags": [
+      "r3f"
+    ],
+    "href": "/experiments/7.three-keyboard"
   },
   {
     "filename": "5.bashub-button/index.tsx",
