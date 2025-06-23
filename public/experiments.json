@@ -1,5 +1,25 @@
 [
   {
+    "filename": "8.knot/index.tsx",
+    "title": "Knot",
+    "description": "Knot",
+    "tags": [
+      "ui",
+      "3d"
+    ],
+    "background": "dots",
+    "href": "/experiments/8.knot"
+  },
+  {
+    "filename": "99.three-keyboard/index.tsx",
+    "title": "Three Keyboard",
+    "description": "Testing keyboard import in three.js",
+    "tags": [
+      "r3f"
+    ],
+    "href": "/experiments/99.three-keyboard"
+  },
+  {
     "filename": "2.shared-layout/index.js",
     "title": "Shared layout",
     "tags": [
@@ -55,15 +75,6 @@
       "r3f"
     ],
     "href": "/experiments/1.cube"
-  },
-  {
-    "filename": "7.three-keyboard/index.tsx",
-    "title": "Three Keyboard",
-    "description": "Testing keyboard import in three.js",
-    "tags": [
-      "r3f"
-    ],
-    "href": "/experiments/7.three-keyboard"
   },
   {
     "filename": "5.bashub-button/index.tsx",
