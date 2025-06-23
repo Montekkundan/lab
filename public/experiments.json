@@ -50,6 +50,17 @@
     "href": "/experiments/7.Chai"
   },
   {
+    "filename": "10.ascii-pyramid/index.tsx",
+    "title": "ASCII Pyramid",
+    "description": "ASCII Pyramid",
+    "tags": [
+      "ui",
+      "3d"
+    ],
+    "background": "dots",
+    "href": "/experiments/10.ascii-pyramid"
+  },
+  {
     "filename": "3.junior-dev/index.jsx",
     "title": "Junior Dev",
     "description": "I am now a junior developer!",
