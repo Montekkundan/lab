@@ -1,16 +1,5 @@
 [
   {
-    "filename": "8.knot/index.tsx",
-    "title": "Knot",
-    "description": "Knot",
-    "tags": [
-      "ui",
-      "3d"
-    ],
-    "background": "dots",
-    "href": "/experiments/8.knot"
-  },
-  {
     "filename": "99.three-keyboard/index.tsx",
     "title": "Three Keyboard",
     "description": "Testing keyboard import in three.js",
@@ -18,6 +7,17 @@
       "r3f"
     ],
     "href": "/experiments/99.three-keyboard"
+  },
+  {
+    "filename": "9.ascii-cube/index.tsx",
+    "title": "ASCII Cube",
+    "description": "ASCII Cube",
+    "tags": [
+      "ui",
+      "3d"
+    ],
+    "background": "dots",
+    "href": "/experiments/9.ascii-cube"
   },
   {
     "filename": "2.shared-layout/index.js",
@@ -86,5 +86,16 @@
     "background": "dots",
     "og": "/ogs/basehub-button.png",
     "href": "/experiments/5.bashub-button"
+  },
+  {
+    "filename": "8.ascii-knot/index.tsx",
+    "title": "ASCII Knot",
+    "description": "ASCII Knot",
+    "tags": [
+      "ui",
+      "3d"
+    ],
+    "background": "dots",
+    "href": "/experiments/8.ascii-knot"
   }
 ]
