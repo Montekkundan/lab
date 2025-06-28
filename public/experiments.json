@@ -1,5 +1,17 @@
 [
   {
+    "filename": "11.multilanguage/index.tsx",
+    "title": "Multi Language Translation",
+    "description": "AI-powered multi-language translation tool",
+    "tags": [
+      "ai",
+      "translation",
+      "ui"
+    ],
+    "background": "dots",
+    "href": "/experiments/11.multilanguage"
+  },
+  {
     "filename": "99.three-keyboard/index.tsx",
     "title": "Three Keyboard",
     "description": "Testing keyboard import in three.js",
