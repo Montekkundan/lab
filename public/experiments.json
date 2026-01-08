@@ -91,6 +91,18 @@
     "href": "/experiments/1.cube"
   },
   {
+    "filename": "12.barnes-hut/index.tsx",
+    "title": "Barnes-Hut N-Body Simulation",
+    "tags": [
+      "simulation",
+      "physics",
+      "canvas",
+      "algorithm"
+    ],
+    "background": "none",
+    "href": "/experiments/12.barnes-hut"
+  },
+  {
     "filename": "5.bashub-button/index.tsx",
     "title": "Bashub Button",
     "description": "Built with Bashub Button",
