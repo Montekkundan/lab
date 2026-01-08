@@ -260,11 +260,15 @@ const TranslationComponent = () => {
                 <div className="mt-2">
                   <p className="font-medium">To start the server:</p>
                   <ol className="list-decimal list-inside mt-1 space-y-1">
-                    <li>Navigate to your model directory</li>
+                    <li>Clone the repository: <code className="bg-red-100 dark:bg-red-800 px-1 rounded">git clone https://github.com/Montekkundan/pytorch-transformer</code></li>
+                    <li>Follow the setup instructions in the repository</li>
                     <li>Run: <code className="bg-red-100 dark:bg-red-800 px-1 rounded">python api_server.py</code></li>
                     <li>Wait for the model to load</li>
                     <li>Refresh this page</li>
                   </ol>
+                  <p className="mt-2">
+                    📖 <a href="https://www.montek.dev/post/building-google-translate-from-scratch-kinda" target="_blank" rel="noopener noreferrer" className="underline hover:text-red-900 dark:hover:text-red-100">Learn more: Building Google Translate from Scratch (kinda)</a>
+                  </p>
                 </div>
               </div>
             </div>
