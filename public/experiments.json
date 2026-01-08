@@ -12,15 +12,6 @@
     "href": "/experiments/11.multilanguage"
   },
   {
-    "filename": "99.three-keyboard/index.tsx",
-    "title": "Three Keyboard",
-    "description": "Testing keyboard import in three.js",
-    "tags": [
-      "r3f"
-    ],
-    "href": "/experiments/99.three-keyboard"
-  },
-  {
     "filename": "9.ascii-cube/index.tsx",
     "title": "ASCII Cube",
     "description": "ASCII Cube",

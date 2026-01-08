@@ -17,13 +17,7 @@ const nextConfig: NextConfig = {
     config.resolve.fallback = { ...config.resolve.fallback, fs: false };
     return config;
   },
-  experimental: {
-    turbo: {
-      rules: {
-        '*.glsl': ['file_text'],
-      },
-    },
-  },
+
   async redirects() {
     return [
       {
@@ -33,6 +27,7 @@ const nextConfig: NextConfig = {
       }
     ]
   },
+
   images: {
     remotePatterns: [
       {
@@ -42,6 +37,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  turbopack: {
+    rules: {
+      '*.glsl': ['file_text'],
+    }
+  }
 };
 
 export default nextConfig;

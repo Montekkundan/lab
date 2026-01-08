@@ -1,5 +1,4 @@
 import { useMatcapTexture, Center, Text3D, OrbitControls } from '@react-three/drei'
-import { Perf } from 'r3f-perf'
 import { useEffect, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -36,7 +35,6 @@ export default function Experience() {
     }, [donutMatcapTexture, textMatcapTexture])
 
     return <>
-        <Perf position="top-left" />
         <OrbitControls makeDefault />
         <Center>
             <Text3D

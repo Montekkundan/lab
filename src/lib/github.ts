@@ -1,11 +1,15 @@
 import { gql, GraphQLClient } from 'graphql-request'
 import uniqBy from 'lodash/uniqBy'
 
-const client = new GraphQLClient('https://api.github.com/graphql', {
-  headers: {
-    Authorization: `Bearer ${process.env.GITHUB_AUTH_TOKEN}`
-  }
-})
+const GITHUB_TOKEN = process.env.GITHUB_AUTH_TOKEN
+
+const client = GITHUB_TOKEN 
+  ? new GraphQLClient('https://api.github.com/graphql', {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`
+      }
+    })
+  : null
 
 const ORG = 'montekkundan'
 const REPO = 'lab'
@@ -45,6 +49,11 @@ interface GitHubResponse {
 }
 
 export const getFileContributors = async (file: string) => {
+  // Skip API call if no GitHub token is configured
+  if (!client) {
+    return []
+  }
+
   try {
     const query = gql`
       query {
