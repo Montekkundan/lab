@@ -34,6 +34,7 @@ export default function BarnesHutSimulation() {
     const [showTrails, setShowTrails] = useState(true);
     const [showMetrics, setShowMetrics] = useState(false);
     const [showControls, setShowControls] = useState(true);
+    const [selectedBodyIndex, setSelectedBodyIndex] = useState<number | null>(null);
 
     const navigatePreset = useCallback((direction: 'prev' | 'next') => {
         const currentIndex = PRESETS.indexOf(currentPreset);
@@ -80,8 +81,18 @@ export default function BarnesHutSimulation() {
         const scaleY = height / (simulation.domainMax - simulation.domainMin);
 
         if (showQuadtree && simulation.quadtree) {
+            let approximatedNodes: any[] = [];
+            let recursedNodes: any[] = [];
+            
+            // If a body is selected, get traversal info
+            if (selectedBodyIndex !== null && selectedBodyIndex < simulation.bodies.length) {
+                const selectedBody = simulation.bodies[selectedBodyIndex];
+                const traversal = simulation.quadtree.root.getTraversalInfo(selectedBody, simulation.theta);
+                approximatedNodes = traversal.approximated;
+                recursedNodes = traversal.recursed;
+            }
+            
             const nodes = simulation.quadtree.getAllNodes();
-            ctx.strokeStyle = 'rgba(100, 100, 255, 0.3)';
             ctx.lineWidth = 1;
             
             for (const node of nodes) {
@@ -89,6 +100,15 @@ export default function BarnesHutSimulation() {
                 const y1 = height - (node.yMax - simulation.domainMin) * scaleY;
                 const x2 = (node.xMax - simulation.domainMin) * scaleX;
                 const y2 = height - (node.yMin - simulation.domainMin) * scaleY;
+                
+                // Color code based on traversal
+                if (approximatedNodes.includes(node)) {
+                    ctx.strokeStyle = 'rgba(0, 255, 0, 0.6)'; // Green for approximated
+                } else if (recursedNodes.includes(node)) {
+                    ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)'; // Red for recursed
+                } else {
+                    ctx.strokeStyle = 'rgba(100, 100, 255, 0.3)'; // Blue for others
+                }
                 
                 ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
                 
@@ -138,6 +158,9 @@ export default function BarnesHutSimulation() {
         for (const body of simulation.bodies) {
             if (body.lost) continue;
             
+            const bodyIndex = simulation.bodies.indexOf(body);
+            const isSelected = bodyIndex === selectedBodyIndex;
+            
             const x = (body.x - simulation.domainMin) * scaleX;
             const y = height - (body.y - simulation.domainMin) * scaleY;
             
@@ -147,6 +170,15 @@ export default function BarnesHutSimulation() {
             const hue = 200 + massNormalized * 60;
             const saturation = 70 + massNormalized * 20;
             const lightness = 50 + massNormalized * 20;
+            
+            // Draw selection ring if selected
+            if (isSelected) {
+                ctx.strokeStyle = 'rgba(255, 255, 0, 0.8)';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(x, y, baseRadius * 2, 0, Math.PI * 2);
+                ctx.stroke();
+            }
             
             const glowRadius = baseRadius * 3.5;
             const gradient = ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
@@ -234,6 +266,54 @@ export default function BarnesHutSimulation() {
             simulationRef.current.speedMultiplier = speedMultiplier;
         }
     }, [theta, speedMultiplier]);
+
+    // Trigger render when selectedBodyIndex or showQuadtree changes
+    useEffect(() => {
+        render();
+    }, [selectedBodyIndex, showQuadtree, render]);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const handleCanvasClick = (e: MouseEvent) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const simulation = simulationRef.current;
+            if (!simulation) return;
+            
+            const { width, height } = canvasSizeRef.current;
+            const scaleX = width / (simulation.domainMax - simulation.domainMin);
+            const scaleY = height / (simulation.domainMax - simulation.domainMin);
+            
+            // Convert click position to simulation coordinates
+            const simX = (x / scaleX) + simulation.domainMin;
+            const simY = simulation.domainMax - (y / scaleY);
+            
+            // Find closest body within a reasonable distance
+            let closestIndex = -1;
+            let closestDist = 20 / scaleX; // 20 pixel threshold
+            
+            simulation.bodies.forEach((body, index) => {
+                if (body.lost) return;
+                const dx = body.x - simX;
+                const dy = body.y - simY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestIndex = index;
+                }
+            });
+            
+            setSelectedBodyIndex(closestIndex >= 0 ? closestIndex : null);
+            render();
+        };
+
+        canvas.addEventListener('click', handleCanvasClick);
+        return () => canvas.removeEventListener('click', handleCanvasClick);
+    }, [render]);
 
     useEffect(() => {
         const handleKeyPress = (e: KeyboardEvent) => {
@@ -353,6 +433,63 @@ export default function BarnesHutSimulation() {
                         <li className="flex items-center gap-2"><Kbd>C</Kbd> Toggle Controls</li>
                         <li className="flex items-center gap-2"><Kbd>←</Kbd> <Kbd>→</Kbd> Change Preset</li>
                     </ul>
+                    <div className="mt-3 pt-3 border-t border-gray-300 dark:border-gray-600">
+                        <p className="font-semibold mb-1">Theta Visualization:</p>
+                        <p className="text-xs">Click a body to see how theta affects force calculation</p>
+                    </div>
+                </Card>
+            )}
+
+            {selectedBodyIndex !== null && showQuadtree && (
+                <Card className="absolute top-4 left-1/2 -translate-x-1/2 p-4 backdrop-blur-md text-xs max-w-2xl">
+                    <h3 className="font-bold mb-3 text-center text-sm">Theta Traversal Visualization (θ = {theta.toFixed(2)})</h3>
+                    
+                    <div className="mb-3 p-2 bg-background/50 rounded border border-border">
+                        <div className="space-y-1 text-xs">
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded-full border-2 border-yellow-500 bg-yellow-500/20" />
+                                <span className="font-semibold">Selected body (yellow ring):</span>
+                                <span>The body experiencing gravitational forces</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded-full bg-blue-400" />
+                                <span className="font-semibold">White/blue bodies:</span>
+                                <span>All other bodies creating gravitational forces on the selected body</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-1 mb-3">
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-green-500" />
+                            <span className="font-semibold">Green boxes (Approximated):</span>
+                        </div>
+                        <p className="ml-6 text-xs opacity-90">
+                            These quadtree nodes are far enough from the selected body that the Barnes-Hut algorithm can approximate all bodies within them as a single mass at their center of mass (red dots). This is the key optimization that makes the algorithm O(n log n) instead of O(n²).
+                        </p>
+                        
+                        <div className="flex items-center gap-2 mt-2">
+                            <div className="w-4 h-4 border-2 border-red-500" />
+                            <span className="font-semibold">Red boxes (Recursed):</span>
+                        </div>
+                        <p className="ml-6 text-xs opacity-90">
+                            These nodes are too close to the selected body to safely approximate. The algorithm recursively descends into their children to calculate forces more accurately. At the finest level, individual body-to-body forces are computed.
+                        </p>
+                        
+                        <div className="flex items-center gap-2 mt-2">
+                            <div className="w-4 h-4 border-2 border-blue-500" />
+                            <span className="font-semibold">Blue boxes (Other nodes):</span>
+                        </div>
+                        <p className="ml-6 text-xs opacity-90">
+                            Standard quadtree structure nodes not involved in this specific body's force calculation.
+                        </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-border">
+                        <p className="text-xs opacity-75 leading-relaxed">
+                            <span className="font-semibold">The θ parameter controls the trade-off:</span> Lower θ (e.g., 0.3) = stricter MAC criterion = more red boxes (recursion) = higher accuracy but slower. Higher θ (e.g., 1.0) = looser criterion = more green boxes (approximation) = faster but less accurate.
+                        </p>
+                    </div>
                 </Card>
             )}
 

@@ -185,6 +185,48 @@ export class QuadTreeNode {
         return nodes;
     }
 
+    getTraversalInfo(body: Body, theta: number): { approximated: QuadTreeNode[], recursed: QuadTreeNode[] } {
+        const approximated: QuadTreeNode[] = [];
+        const recursed: QuadTreeNode[] = [];
+        
+        this._collectTraversalInfo(body, theta, approximated, recursed);
+        
+        return { approximated, recursed };
+    }
+
+    private _collectTraversalInfo(
+        body: Body, 
+        theta: number, 
+        approximated: QuadTreeNode[], 
+        recursed: QuadTreeNode[]
+    ): void {
+        if (this.totalMass <= 0) return;
+        
+        const dx = this.centerX - body.x;
+        const dy = this.centerY - body.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        if (this.isLeaf) {
+            // Leaf nodes are always used for direct calculation
+            return;
+        }
+        
+        const size = Math.max(this.xMax - this.xMin, this.yMax - this.yMin);
+        
+        if (size / dist < theta) {
+            // MAC satisfied - this node is approximated
+            approximated.push(this);
+        } else {
+            // MAC not satisfied - recurse into children
+            recursed.push(this);
+            for (const child of this.children) {
+                if (child) {
+                    child._collectTraversalInfo(body, theta, approximated, recursed);
+                }
+            }
+        }
+    }
+
     private samePosition(a: Body, b: Body): boolean {
         const eps = 1e-12;
         return Math.abs(a.x - b.x) < eps && Math.abs(a.y - b.y) < eps;
