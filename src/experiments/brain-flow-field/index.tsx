@@ -8,7 +8,7 @@ import BrainModel from './brain-flow-field'
 type ExperimentComponent<P = object> = FC<P> & {
   Layout?: FC<R3FCanvasLayoutProps>
   Title?: string
-  Description?: string
+  Description?: React.ReactNode
   background?: string
   Tags?: string[]
 }

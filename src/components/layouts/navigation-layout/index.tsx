@@ -7,7 +7,7 @@ import { getExampleGithubUrl } from '@/lib/utils'
 
 export type NavigationLayoutProps = {
   title?: string
-  description?: string
+  description?: React.ReactNode
   slug: string
   children: React.ReactNode
   bg?: string

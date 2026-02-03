@@ -5,14 +5,14 @@ import { NavigationLayout } from '@/components/layouts/navigation-layout';
 interface InterpreterLabProps {}
 
 interface InterpreterLabComponent extends FC<InterpreterLabProps> {
-  Layout?: FC<{ children: React.ReactNode; slug: string; title?: string; description?: string; background?: string }>;
+  Layout?: FC<{ children: React.ReactNode; slug: string; title?: string; description?: React.ReactNode; background?: string }>;
   Title?: string;
-  Description?: string;
+  Description?: React.ReactNode;
   Tags?: string[];
   background?: 'white' | 'dots' | 'dots_white' | 'none';
 }
 
-const FullscreenLayout: FC<{ children: React.ReactNode; slug: string; title?: string; description?: string }> = ({
+const FullscreenLayout: FC<{ children: React.ReactNode; slug: string; title?: string; description?: React.ReactNode }> = ({
   children,
   title,
   description,

@@ -9,7 +9,7 @@ import { R3FCanvasLayout, R3FCanvasLayoutProps } from '../components/layouts/r3f
 type ExperimentComponent<P = object> = FC<P> & {
   Layout?: FC<R3FCanvasLayoutProps>;
   Title?: string;
-  Description?: string;
+  Description?: React.ReactNode;
   background?: string;
   Tags?: string[];
 }

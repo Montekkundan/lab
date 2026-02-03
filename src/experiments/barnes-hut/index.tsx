@@ -7,14 +7,14 @@ import { FC } from 'react';
 interface BarnesHutProps {}
 
 interface BarnesHutComponent extends FC<BarnesHutProps> {
-    Layout?: FC<{ children: React.ReactNode; slug: string; title?: string; description?: string; background?: string }>;
+    Layout?: FC<{ children: React.ReactNode; slug: string; title?: string; description?: React.ReactNode; background?: string }>;
     Title?: string;
-    Description?: string;
+    Description?: React.ReactNode;
     Tags?: string[];
     background?: 'white' | 'dots' | 'dots_white' | 'none';
 }
 
-const FullscreenLayout: FC<{ children: React.ReactNode; slug: string; title?: string; description?: string }> = ({
+const FullscreenLayout: FC<{ children: React.ReactNode; slug: string; title?: string; description?: React.ReactNode }> = ({
     children,
     title,
     description,
@@ -39,6 +39,9 @@ BarnesHut.Description = (
     <>
         <p>
             O(n log n) Barnes–Hut gravitational simulation with quadtree visualization. Press Space to play/pause, R to reset, Q to toggle quadtree, T to toggle trails.
+        </p>
+        <p>
+            https://www.montek.dev/post/simulating-100000-stars-in-real-time-with-the-barnes-hut-algorithm
         </p>
         <p>
             <a

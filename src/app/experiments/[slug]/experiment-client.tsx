@@ -13,12 +13,12 @@ interface ExtendedFC<P = Record<string, unknown>> extends React.FC<P> {
     children: React.ReactNode;
     slug: string;
     title?: string;
-    description?: string;
+    description?: React.ReactNode;
     background?: 'white' | 'dots' | 'dots_white' | 'none';
   }>
   getLayout?: GetLayoutFn<P>
   Title?: string
-  Description?: string
+  Description?: React.ReactNode
   Tags?: string[]
   background?: 'white' | 'dots' | 'dots_white' | 'none'
   og?: string
@@ -30,7 +30,7 @@ type Component<P = Record<string, unknown>> = ExtendedFC<P>
 type GetLayoutFn<P = Record<string, unknown>> = React.FC<{
   Component: Component<P>
   title?: string
-  description?: string
+  description?: React.ReactNode
   slug: string
   background?: 'white' | 'dots' | 'dots_white' | 'none'
   bg?: string
@@ -45,7 +45,7 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
 
   if (Component?.Layout) {
     if (Component.Layout === R3FCanvasLayout) {
-      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: string, slug: string, background?: string, bg?: string }> = ({ Component, title, description, slug }) => (
+      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, background?: string, bg?: string }> = ({ Component, title, description, slug }) => (
         <R3FCanvasLayout 
           slug={slug} 
           title={title} 
@@ -59,7 +59,7 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
       return R3FLayoutWrapper
     }
   
-      const LayoutWrapper: React.FC<{ Component: Component, title?: string, description?: string, slug: string, background?: 'white' | 'dots' | 'dots_white' | 'none' }> = ({ Component, title, description, slug, background }) => {
+      const LayoutWrapper: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, background?: 'white' | 'dots' | 'dots_white' | 'none' }> = ({ Component, title, description, slug, background }) => {
         const Layout = Component.Layout;
         if (!Layout) return null;
         
@@ -78,7 +78,7 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
     return LayoutWrapper
   }
 
-  const DefaultReactLayout: React.FC<{ Component: Component, title?: string, description?: string, slug: string }> = ({ Component, title, description, slug }) => (
+  const DefaultReactLayout: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string }> = ({ Component, title, description, slug }) => (
     <DefaultLayout slug={slug} title={title} description={description}>
       <Component />
     </DefaultLayout>

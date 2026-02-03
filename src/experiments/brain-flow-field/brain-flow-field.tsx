@@ -1,4 +1,5 @@
 import { Center, useGLTF } from '@react-three/drei'
+import type { JSX } from 'react'
 
 export default function BrainModel(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF('/models/brain.glb')
