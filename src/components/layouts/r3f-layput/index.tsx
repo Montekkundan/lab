@@ -15,13 +15,14 @@ export const R3FCanvasLayout: FC<R3FCanvasLayoutProps> = ({
   title,
   description,
   slug,
+  notebookPath,
   htmlChildren,
   bg,
   ...rest
 }) => {
   const componentProps = bg || 'transparent';
   return (
-    <NavigationLayout title={title} description={description} slug={slug}>
+    <NavigationLayout title={title} description={description} slug={slug} notebookPath={notebookPath}>
       {htmlChildren}
       <div style={{ position: 'fixed', height: '100vh', width: '100vw', background: componentProps }}>
         <Canvas style={{ background: componentProps }} {...rest}>

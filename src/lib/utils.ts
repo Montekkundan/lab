@@ -41,6 +41,11 @@ export const getExampleGithubUrl = (filename: string) => {
   return url;
 }
 
+export const getGithubBlobUrl = (relativePath: string) => {
+  const cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath
+  return `${githubUrl}/blob/master/${cleanPath}`
+}
+
 export const getExamplePath = (filename: string) => {
   if (filename.includes('/')) {
     return `src/experiments/${filename}`;

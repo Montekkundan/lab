@@ -417,5 +417,6 @@ VitMnistTokenGrid.Title = 'ViT Token Grid'
 VitMnistTokenGrid.Description =
   'Minimal MNIST ViT demo with patch token visualization, ONNX export + browser inference, and MNIST-style preprocessing (center/scale to 20×20, threshold + invert, light blur/dilate for stroke normalization).'
 VitMnistTokenGrid.Tags = ['ai', 'ui', 'canvas']
+VitMnistTokenGrid.Notebook = 'notebooks/vit-mnist-token-grid.ipynb'
 
 export default VitMnistTokenGrid

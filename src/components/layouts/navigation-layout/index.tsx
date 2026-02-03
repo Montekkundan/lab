@@ -3,12 +3,13 @@ import React, { FC, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 import { Formated } from '@/components/common/formated'
-import { getExampleGithubUrl } from '@/lib/utils'
+import { getExampleGithubUrl, getGithubBlobUrl } from '@/lib/utils'
 
 export type NavigationLayoutProps = {
   title?: string
   description?: React.ReactNode
   slug: string
+  notebookPath?: string
   children: React.ReactNode
   bg?: string
 }
@@ -17,7 +18,8 @@ export const NavigationLayout: FC<NavigationLayoutProps> = ({
   children,
   title,
   description,
-  slug
+  slug,
+  notebookPath
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -64,13 +66,39 @@ export const NavigationLayout: FC<NavigationLayoutProps> = ({
                 {title && (
                   <div className="flex justify-between items-center mb-4 gap-2">
                     <h1 className="text-2xl font-bold m-0">{title}</h1>
-                    <a 
-                      href={getExampleGithubUrl(slug)} 
-                      title="source code"
-                      className="bg-accent text-accent-foreground border border-border rounded px-2 py-1 text-xs hover:opacity-90 hover:scale-105 transition-all duration-200"
-                    >
-                      {'<>'}
-                    </a>
+                    <div className="flex items-center gap-2">
+                      {notebookPath ? (
+                        <a
+                          href={getGithubBlobUrl(notebookPath)}
+                          title="notebook"
+                          className="bg-accent text-accent-foreground border border-border rounded px-2 py-1 text-xs hover:opacity-90 hover:scale-105 transition-all duration-200"
+                        >
+                          <span className="sr-only">notebook</span>
+                          <svg
+                            viewBox="0 0 20 20"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M4 3h9a2 2 0 0 1 2 2v11a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V4a1 1 0 0 1 1-1Z" />
+                            <path d="M7 7h6" />
+                            <path d="M7 10h6" />
+                            <path d="M7 13h4" />
+                          </svg>
+                        </a>
+                      ) : null}
+                      <a 
+                        href={getExampleGithubUrl(slug)} 
+                        title="source code"
+                        className="bg-accent text-accent-foreground border border-border rounded px-2 py-1 text-xs hover:opacity-90 hover:scale-105 transition-all duration-200"
+                      >
+                        {'<>'}
+                      </a>
+                    </div>
                   </div>
                 )}
                 

@@ -14,12 +14,14 @@ interface ExtendedFC<P = Record<string, unknown>> extends React.FC<P> {
     slug: string;
     title?: string;
     description?: React.ReactNode;
+    notebookPath?: string;
     background?: 'white' | 'dots' | 'dots_white' | 'none';
   }>
   getLayout?: GetLayoutFn<P>
   Title?: string
   Description?: React.ReactNode
   Tags?: string[]
+  Notebook?: string
   background?: 'white' | 'dots' | 'dots_white' | 'none'
   og?: string
   bg?: string
@@ -32,6 +34,7 @@ type GetLayoutFn<P = Record<string, unknown>> = React.FC<{
   title?: string
   description?: React.ReactNode
   slug: string
+  notebookPath?: string
   background?: 'white' | 'dots' | 'dots_white' | 'none'
   bg?: string
 }>
@@ -45,11 +48,12 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
 
   if (Component?.Layout) {
     if (Component.Layout === R3FCanvasLayout) {
-      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, background?: string, bg?: string }> = ({ Component, title, description, slug }) => (
+      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, notebookPath?: string, background?: string, bg?: string }> = ({ Component, title, description, slug, notebookPath }) => (
         <R3FCanvasLayout 
           slug={slug} 
           title={title} 
           description={description}
+          notebookPath={notebookPath}
           bg={Component.bg}
         >
           <Component />
@@ -59,7 +63,7 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
       return R3FLayoutWrapper
     }
   
-      const LayoutWrapper: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, background?: 'white' | 'dots' | 'dots_white' | 'none' }> = ({ Component, title, description, slug, background }) => {
+      const LayoutWrapper: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, notebookPath?: string, background?: 'white' | 'dots' | 'dots_white' | 'none' }> = ({ Component, title, description, slug, notebookPath, background }) => {
         const Layout = Component.Layout;
         if (!Layout) return null;
         
@@ -68,6 +72,7 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
             slug={slug} 
             title={title} 
             description={description} 
+            notebookPath={notebookPath}
             background={background || Component.background}
           >
             <Component />
@@ -78,8 +83,8 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
     return LayoutWrapper
   }
 
-  const DefaultReactLayout: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string }> = ({ Component, title, description, slug }) => (
-    <DefaultLayout slug={slug} title={title} description={description}>
+  const DefaultReactLayout: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, notebookPath?: string }> = ({ Component, title, description, slug, notebookPath }) => (
+    <DefaultLayout slug={slug} title={title} description={description} notebookPath={notebookPath}>
       <Component />
     </DefaultLayout>
   )
@@ -134,6 +139,7 @@ export default function ExperimentClient({ slug, importPath }: ExperimentClientP
       title={Component.default.Title}
       description={Component.default.Description}
       slug={slug}
+      notebookPath={Component.default.Notebook}
       background={Component.default.background}
     />
   )

@@ -12,10 +12,11 @@ export const DefaultLayout: FC<DefaultLayoutProps> = ({
   title,
   description,
   slug,
-  background = 'white'
+  background = 'white',
+  notebookPath
 }) => {
   return (
-    <NavigationLayout title={title} description={description} slug={slug}>
+    <NavigationLayout title={title} description={description} slug={slug} notebookPath={notebookPath}>
       <div className={`${s['container']} ${s[`bg-${background}`]}`}>
         <div className={s['content']}>
           {children}
