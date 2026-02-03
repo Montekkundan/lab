@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     default: defaultMeta.title,
     template: "%s | lab.montek.dev",
   },
+  alternates: {
+    canonical: "/",
+  },
   description: defaultMeta.description,
   metadataBase: new URL(siteOrigin),
   authors: [{ name: "Montek Kundan", url: "https://montek.dev" }],
@@ -99,8 +102,8 @@ export default function RootLayout({
       >
         <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
-            enableSystem
+            forcedTheme="dark"
+            enableSystem={false}
             disableTransitionOnChange
           >
             {children}

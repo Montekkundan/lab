@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { githubUrl, isClient } from '@/lib/constants'
-import experimentsData from '../../public/experiments.json';
+import { experimentsConfig } from '@/lib/experiments.config'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -41,42 +41,27 @@ export const getExampleGithubUrl = (filename: string) => {
   return url;
 }
 
-interface ExperimentData {
-  filename: string;
-  title: string;
-  description: string;
-  tags?: string[];
-  background?: string;
-  href: string;
-}
-
 export const getExamplePath = (filename: string) => {
-  const basePath = `src/experiments/${filename}`;
-  
-  try {
-    const matchingExperiment = (experimentsData as ExperimentData[]).find((exp) => {
-      if (exp.href === `/experiments/${filename}`) {
-        return true;
-      }
-      
-      if (exp.filename.includes('/')) {
-        const experimentBaseName = exp.filename.split('/')[0];
-        return experimentBaseName === filename;
-      }
-      
-      const experimentBaseName = exp.filename.split('.')[0];
-      return experimentBaseName === filename;
-    });
-    
-    if (matchingExperiment) {
-      const completePath = `src/experiments/${matchingExperiment.filename}`;
-      return completePath;
-    }
-  } catch (error) {
-    console.error("Error accessing experiments data:", error);
+  if (filename.includes('/')) {
+    return `src/experiments/${filename}`;
   }
-  
-  return basePath;
+
+  const bySlug = experimentsConfig.find((exp) => exp.slug === filename);
+  if (bySlug) {
+    return `src/experiments/${bySlug.file}`;
+  }
+
+  const byFile = experimentsConfig.find((exp) => {
+    const baseName = exp.file.split('/')[0];
+    const fileStem = baseName.split('.')[0];
+    return baseName === filename || fileStem === filename;
+  });
+
+  if (byFile) {
+    return `src/experiments/${byFile.file}`;
+  }
+
+  return `src/experiments/${filename}`;
 }
 
 export const isReactComponent = (

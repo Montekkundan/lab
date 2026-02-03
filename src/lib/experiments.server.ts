@@ -2,13 +2,13 @@ import { cache } from 'react'
 import { isDev } from './constants'
 import { getFileContributors, GitHubUser } from './github'
 import { getExamplePath } from './utils'
-
-import rawExperimentsData from '../../public/experiments.json'
+import { experimentsConfig, getExperimentImportPath } from './experiments.config'
 
 type Contributor = GitHubUser;
 
 interface ExperimentData {
   filename: string;
+  slug: string;
   title?: string;
   description?: string;
   tags?: string[];
@@ -17,27 +17,15 @@ interface ExperimentData {
   og?: string;
   number?: number;
   contributors?: Contributor[];
+  importPath: string;
 }
-
-interface RawExperimentData {
-  filename: string;
-  title?: string;
-  description?: string;
-  tags?: string[];
-  href?: string;
-  background?: string;
-  og?: string;
-}
-
-const experimentsData = rawExperimentsData as RawExperimentData[];
 
 /**
  * Gets all experiment slugs
  * This function returns a cached list of experiment slugs
  */
 export const getAllExperimentSlugs = cache(() => {
-  const experiments = experimentsData.map(exp => exp.filename)
-  return experiments
+  return experimentsConfig.map((exp) => exp.slug)
 })
 
 /**
@@ -45,31 +33,30 @@ export const getAllExperimentSlugs = cache(() => {
  * This function is cached
  */
 export const getAllExperiments = cache(async () => {
-  // Start with experiments from JSON file
-  let experiments: ExperimentData[] = experimentsData.map(exp => ({
-    filename: exp.filename,
-    title: exp.title || formatExperimentTitle(exp.filename),
+  // Start with experiments from config
+  let experiments: ExperimentData[] = experimentsConfig.map((exp) => ({
+    filename: exp.file,
+    slug: exp.slug,
+    title: exp.title || formatExperimentTitle(exp.slug),
     description: exp.description || '',
     tags: exp.tags || [],
-    href: exp.href || `/experiments/${exp.filename.replace(/\.[^/.]+$/, '')}`,
+    href: `/experiments/${exp.slug}`,
     background: exp.background || 'dots',
-    og: exp.og || '' // Provide default empty string if og is missing
+    og: exp.og || '',
+    importPath: getExperimentImportPath(exp)
   }))
-
-  // Sort experiments (newest first based on number in filename)
-  experiments = experiments.sort((a, b) => 
-    b.filename.localeCompare(a.filename, undefined, { numeric: true })
-  )
 
   if (!isDev) {
-    experiments = experiments.filter(e => !e.tags?.includes('private'))
+    experiments = experiments.filter((e) => !e.tags?.includes('private'))
   }
 
-  // Numerate experiments
-  experiments = experiments.map((e, i) => ({
-    ...e,
-    number: experiments.length - i
-  }))
+  // Order and numerate experiments based on config order (descending)
+  experiments = experiments
+    .map((e) => ({
+      ...e,
+      number: experimentsConfig.find((exp) => exp.slug === e.slug)?.order ?? 0
+    }))
+    .sort((a, b) => (b.number ?? 0) - (a.number ?? 0))
 
   // Add contributors (keep the API call since it's not file system dependent)
   try {
@@ -92,13 +79,11 @@ export const getAllExperiments = cache(async () => {
 })
 
 /**
- * Formats a filename to a display title
+ * Formats a slug to a display title
  */
-function formatExperimentTitle(filename: string): string {
-  let title = filename
-    .replace(/^\d+\./, '') // Remove leading numbers
-    .replace(/\.[jt]sx?$/, '') // Remove file extensions
-    .replace(/-/g, ' ') // Replace dashes with spaces
+function formatExperimentTitle(slug: string): string {
+  let title = slug
+    .replace(/-/g, ' ')
 
   title = title.charAt(0).toUpperCase() + title.slice(1)
 

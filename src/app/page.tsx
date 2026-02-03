@@ -30,7 +30,7 @@ export default async function Home() {
         <p>
           Take a look at the examples below.
           My{' '}
-          <a href="https://github.com/montekkundan/montek-lab">
+          <a href="https://github.com/montekkundan/lab">
             github repo
           </a>
           .
