@@ -9,6 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "dev:sandbox": "NODE_ENV=development WATCHPACK_POLLING=true CHOKIDAR_USEPOLLING=1 next dev --turbopack --hostname 0.0.0.0 --port 14083",
     "update-experiments": "bun scripts/generate-experiments.ts"
   },
   "dependencies": {
