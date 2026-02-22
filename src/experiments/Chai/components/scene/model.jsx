@@ -9,7 +9,7 @@ import lerp from 'lerp'
 extend({ LiquidRefractionMaterial });
 
 export default function Model() {
-    const { nodes } = useGLTF("/models/chai.glb");
+    const { nodes } = useGLTF("/models/chai.v2.glb");
     const { viewport, size } = useThree()
     const torus = useRef(null);
     const liquidBody = useRef(null);
@@ -197,3 +197,5 @@ export default function Model() {
         </group>
     )
 }
+
+useGLTF.preload("/models/chai.v2.glb");

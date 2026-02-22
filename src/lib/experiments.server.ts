@@ -1,8 +1,9 @@
-import { cache } from 'react'
+import { cacheLife, cacheTag } from 'next/cache'
 import { isDev } from './constants'
 import { getFileContributors, GitHubUser } from './github'
 import { getExamplePath } from './utils'
-import { experimentsConfig, getExperimentImportPath } from './experiments.config'
+import { experimentsConfig, getExperimentImportPath, isExperimentPublished } from './experiments.config'
+import { CACHE_TAGS } from './cache-tags'
 
 type Contributor = GitHubUser;
 
@@ -15,7 +16,7 @@ interface ExperimentData {
   href?: string;
   background?: string;
   og?: string;
-  number?: number;
+  createdAt: string;
   contributors?: Contributor[];
   importPath: string;
 }
@@ -24,17 +25,27 @@ interface ExperimentData {
  * Gets all experiment slugs
  * This function returns a cached list of experiment slugs
  */
-export const getAllExperimentSlugs = cache(() => {
-  return experimentsConfig.map((exp) => exp.slug)
-})
+export async function getAllExperimentSlugs() {
+  'use cache'
+  cacheTag(CACHE_TAGS.experimentsList)
+  cacheLife('hours')
+  return experimentsConfig.filter(isExperimentPublished).map((exp) => exp.slug)
+}
 
 /**
  * Gets all experiments with metadata
  * This function is cached
  */
-export const getAllExperiments = cache(async () => {
+export async function getAllExperiments() {
+  'use cache'
+  cacheTag(CACHE_TAGS.experimentsList)
+  cacheTag(CACHE_TAGS.contributors)
+  cacheLife('hours')
+
   // Start with experiments from config
-  let experiments: ExperimentData[] = experimentsConfig.map((exp) => ({
+  let experiments: ExperimentData[] = experimentsConfig
+    .filter(isExperimentPublished)
+    .map((exp) => ({
     filename: exp.file,
     slug: exp.slug,
     title: exp.title || formatExperimentTitle(exp.slug),
@@ -43,6 +54,7 @@ export const getAllExperiments = cache(async () => {
     href: `/experiments/${exp.slug}`,
     background: exp.background || 'dots',
     og: exp.og || '',
+    createdAt: exp.createdAt,
     importPath: getExperimentImportPath(exp)
   }))
 
@@ -50,13 +62,10 @@ export const getAllExperiments = cache(async () => {
     experiments = experiments.filter((e) => !e.tags?.includes('private'))
   }
 
-  // Order and numerate experiments based on config order (descending)
-  experiments = experiments
-    .map((e) => ({
-      ...e,
-      number: experimentsConfig.find((exp) => exp.slug === e.slug)?.order ?? 0
-    }))
-    .sort((a, b) => (b.number ?? 0) - (a.number ?? 0))
+  // Order experiments by newest created date first.
+  experiments = experiments.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
 
   // Add contributors (keep the API call since it's not file system dependent)
   try {
@@ -76,7 +85,7 @@ export const getAllExperiments = cache(async () => {
   }
   
   return experiments
-})
+}
 
 /**
  * Formats a slug to a display title

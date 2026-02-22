@@ -1,6 +1,12 @@
 import { notFound } from 'next/navigation'
-import { getExperimentBySlug, getExperimentImportPath } from '@/lib/experiments.config'
+import { experimentsConfig, getExperimentBySlug, isExperimentPublished } from '@/lib/experiments.config'
 import ExperimentClient from './experiment-client'
+
+export async function generateStaticParams() {
+  return experimentsConfig
+    .filter(isExperimentPublished)
+    .map((experiment) => ({ slug: experiment.slug }))
+}
 
 export default async function ExperimentPage({
   params,
@@ -10,11 +16,9 @@ export default async function ExperimentPage({
   const { slug } = await params
   const experiment = getExperimentBySlug(slug)
 
-  if (!experiment) {
+  if (!experiment || !isExperimentPublished(experiment)) {
     notFound()
   }
 
-  const importPath = getExperimentImportPath(experiment)
-
-  return <ExperimentClient slug={slug} importPath={importPath} />
+  return <ExperimentClient slug={slug} />
 }

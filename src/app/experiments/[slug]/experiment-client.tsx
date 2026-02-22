@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, use, useMemo } from 'react'
 import { R3FCanvasLayout } from '@/components/layouts/r3f-layput'
 import { DefaultLayout } from '@/components/layouts/default-layout'
+import { experimentImportMap, type ExperimentLoader, type ExperimentModule } from '@/lib/experiments.import-map'
 
 type Module<P> = {
   default: P
@@ -94,53 +95,51 @@ const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
 
 type ExperimentClientProps = {
   slug: string
-  importPath: string
 }
 
-export default function ExperimentClient({ slug, importPath }: ExperimentClientProps) {
-  const [Component, setComponent] = useState<Module<Component>>()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+type ExperimentClientContentProps = {
+  slug: string
+  loader: ExperimentLoader
+}
 
-  useEffect(() => {
-    async function loadComponent() {
-      try {
-        const Comp = await import(`@/experiments/${importPath}`)
-        setComponent(Comp)
-      } catch (err) {
-        console.error("Failed to load experiment:", err)
-        setError(err as Error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    
-    loadComponent()
-  }, [importPath])
-
-  if (error) {
-    return <div className="p-8 text-center">
-      <h1 className="text-3xl font-bold mb-4">Experiment Not Found</h1>
-      <p>Sorry, the experiment &quot;{slug}&quot; could not be loaded.</p>
-    </div>
-  }
-
-  if (loading || !Component) {
-    return <div className="p-8 flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-  }
-
-  const Layout = resolveLayout(Component)
+function ExperimentClientContent({ slug, loader }: ExperimentClientContentProps) {
+  const modulePromise = useMemo(() => loader() as Promise<ExperimentModule>, [loader])
+  const Module = use(modulePromise) as Module<Component>
+  const Layout = resolveLayout(Module)
 
   return (
     <Layout
-      Component={Component.default}
-      title={Component.default.Title}
-      description={Component.default.Description}
+      Component={Module.default}
+      title={Module.default.Title}
+      description={Module.default.Description}
       slug={slug}
-      notebookPath={Component.default.Notebook}
-      background={Component.default.background}
+      notebookPath={Module.default.Notebook}
+      background={Module.default.background}
     />
+  )
+}
+
+export default function ExperimentClient({ slug }: ExperimentClientProps) {
+  const loader = (experimentImportMap as Record<string, ExperimentLoader>)[slug]
+
+  if (!loader) {
+    return (
+      <div className="p-8 text-center">
+        <h1 className="text-3xl font-bold mb-4">Experiment Not Found</h1>
+        <p>Sorry, the experiment &quot;{slug}&quot; could not be loaded.</p>
+      </div>
+    )
+  }
+
+  return (
+    <Suspense
+      fallback={
+        <div className="p-8 flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      }
+    >
+      <ExperimentClientContent slug={slug} loader={loader} />
+    </Suspense>
   )
 }

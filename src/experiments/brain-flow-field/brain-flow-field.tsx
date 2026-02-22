@@ -2,7 +2,7 @@ import { Center, useGLTF } from '@react-three/drei'
 import type { JSX } from 'react'
 
 export default function BrainModel(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF('/models/brain.glb')
+  const { nodes, materials } = useGLTF('/models/brain.v2.glb')
 
   return (
     <group {...props} dispose={null}>
@@ -33,4 +33,4 @@ export default function BrainModel(props: JSX.IntrinsicElements['group']) {
   )
 }
 
-useGLTF.preload('/models/brain.glb')
+useGLTF.preload('/models/brain.v2.glb')

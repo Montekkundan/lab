@@ -3,6 +3,17 @@ import Image from 'next/image'
 import { getAllExperiments } from '@/lib/experiments.server'
 import styles from './page.module.css'
 
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+})
+
+const parseLocalDate = (isoDate: string) => {
+  const [year, month, day] = isoDate.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
+
 export default async function Home() {
   const experiments = await getAllExperiments()
 
@@ -72,7 +83,9 @@ export default async function Home() {
             <div className={styles.cardContent}>
               <div className={styles.cardHeader}>
                 <h3 className={styles.cardTitle}>{exp.title}</h3>
-                <div className={styles.cardNumber}>#{exp.number}</div>
+                <time className={styles.cardDate} dateTime={exp.createdAt}>
+                  {dateFormatter.format(parseLocalDate(exp.createdAt))}
+                </time>
               </div>
 
               {exp.tags && exp.tags.length > 0 && (

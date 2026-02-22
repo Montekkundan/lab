@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  cacheComponents: true,
   webpack: (config) => {
     // Raw-loader for .glsl files
     config.module.rules.push({
@@ -25,6 +26,29 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true
       }
+    ]
+  },
+
+  async headers() {
+    return [
+      {
+        source: '/models/:path*.v2.glb',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/models/:path*.glb',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, must-revalidate',
+          },
+        ],
+      },
     ]
   },
 
