@@ -83,7 +83,7 @@ const examples: Record<TabKey, { label: string; code: string }> = {
     code: [
     "let user = {",
     "  \"name\": \"monty\",",
-    "  \"score\": 42,",
+    "  \"score\": \"42\",",
     "};",
     "",
     "user[\"name\"] + \"-\" + user[\"score\"];",
