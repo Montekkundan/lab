@@ -5,7 +5,7 @@
   "scripts": {
     "predev": "bun scripts/generate-experiments.ts",
     "dev": "next dev --turbopack",
-    "prebuild": "bun scripts/generate-experiments.ts",
+    "prebuild": "bun scripts/generate-experiments.ts && bash scripts/build-monty.sh",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

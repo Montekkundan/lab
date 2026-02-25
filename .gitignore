@@ -46,6 +46,9 @@ next-env.d.ts
 # generated
 /public/experiments.json
 
+# local server binaries
+/bin/
+
 # macOS
 .AppleDouble
 .LSOverride
