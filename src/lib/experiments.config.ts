@@ -139,15 +139,15 @@ export const experimentsConfig: ExperimentConfig[] = [
   //   tags: ['r3f', 'gpgpu', 'particles']
   // },
 
-  //   {
-  //   order: 16,
-  //   slug: 'interpreter-lab',
-  //   file: 'interpreter-lab/index.tsx',
-  //   title: 'Interpreter Lab',
-  //   description: 'Minimal editor with a collapsible inspection rail for lexing, parsing, evaluation, and types.',
-  //   tags: ['ui', 'editor', 'interpreter'],
-  //   background: 'none'
-  // },
+  {
+    slug: 'monty-interperator',
+    file: 'monty-interperator/index.tsx',
+    createdAt: '2026-02-24',
+    title: 'Monty Interperator',
+    description: 'Monty editor wired to a Go interpreter backend bridge.',
+    tags: ['ui', 'editor', 'interpreter'],
+    background: 'none'
+  },
 ];
 
 export const isExperimentPublished = (experiment: ExperimentConfig) =>

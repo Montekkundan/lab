@@ -23,4 +23,5 @@ export const experimentImportMap = {
   'cube': () => import('@/experiments/cube'),
   'barnes-hut': () => import('@/experiments/barnes-hut'),
   'vit-mnist-token-grid': () => import('@/experiments/vit-mnist-token-grid'),
+  'monty-interperator': () => import('@/experiments/monty-interperator'),
 } satisfies Record<string, ExperimentLoader>
