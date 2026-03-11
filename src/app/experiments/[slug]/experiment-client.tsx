@@ -40,59 +40,6 @@ type GetLayoutFn<P = Record<string, unknown>> = React.FC<{
   bg?: string
 }>
 
-const resolveLayout = (Comp: Module<Component>): GetLayoutFn => {
-  const Component = Comp.default
-
-  if (Component?.getLayout) {
-    return Component.getLayout
-  }
-
-  if (Component?.Layout) {
-    if (Component.Layout === R3FCanvasLayout) {
-      const R3FLayoutWrapper: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, notebookPath?: string, background?: string, bg?: string }> = ({ Component, title, description, slug, notebookPath }) => (
-        <R3FCanvasLayout 
-          slug={slug} 
-          title={title} 
-          description={description}
-          notebookPath={notebookPath}
-          bg={Component.bg}
-        >
-          <Component />
-        </R3FCanvasLayout>
-      )
-      R3FLayoutWrapper.displayName = 'R3FLayoutWrapper'
-      return R3FLayoutWrapper
-    }
-  
-      const LayoutWrapper: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, notebookPath?: string, background?: 'white' | 'dots' | 'dots_white' | 'none' }> = ({ Component, title, description, slug, notebookPath, background }) => {
-        const Layout = Component.Layout;
-        if (!Layout) return null;
-        
-        return (
-          <Layout 
-            slug={slug} 
-            title={title} 
-            description={description} 
-            notebookPath={notebookPath}
-            background={background || Component.background}
-          >
-            <Component />
-          </Layout>
-        );
-      }
-    LayoutWrapper.displayName = 'LayoutWrapper'
-    return LayoutWrapper
-  }
-
-  const DefaultReactLayout: React.FC<{ Component: Component, title?: string, description?: React.ReactNode, slug: string, notebookPath?: string }> = ({ Component, title, description, slug, notebookPath }) => (
-    <DefaultLayout slug={slug} title={title} description={description} notebookPath={notebookPath}>
-      <Component />
-    </DefaultLayout>
-  )
-  DefaultReactLayout.displayName = 'DefaultReactLayout'
-  return DefaultReactLayout
-}
-
 type ExperimentClientProps = {
   slug: string
 }
@@ -105,17 +52,61 @@ type ExperimentClientContentProps = {
 function ExperimentClientContent({ slug, loader }: ExperimentClientContentProps) {
   const modulePromise = useMemo(() => loader() as Promise<ExperimentModule>, [loader])
   const Module = use(modulePromise) as Module<Component>
-  const Layout = resolveLayout(Module)
+  const Component = Module.default
+
+  if (Component?.getLayout) {
+    const Layout = Component.getLayout
+    return (
+      <Layout
+        Component={Component}
+        title={Component.Title}
+        description={Component.Description}
+        slug={slug}
+        notebookPath={Component.Notebook}
+        background={Component.background}
+        bg={Component.bg}
+      />
+    )
+  }
+
+  if (Component?.Layout === R3FCanvasLayout) {
+    return (
+      <R3FCanvasLayout
+        slug={slug}
+        title={Component.Title}
+        description={Component.Description}
+        notebookPath={Component.Notebook}
+        bg={Component.bg}
+      >
+        <Component />
+      </R3FCanvasLayout>
+    )
+  }
+
+  if (Component?.Layout) {
+    const Layout = Component.Layout
+    return (
+      <Layout
+        slug={slug}
+        title={Component.Title}
+        description={Component.Description}
+        notebookPath={Component.Notebook}
+        background={Component.background}
+      >
+        <Component />
+      </Layout>
+    )
+  }
 
   return (
-    <Layout
-      Component={Module.default}
-      title={Module.default.Title}
-      description={Module.default.Description}
+    <DefaultLayout
       slug={slug}
-      notebookPath={Module.default.Notebook}
-      background={Module.default.background}
-    />
+      title={Component.Title}
+      description={Component.Description}
+      notebookPath={Component.Notebook}
+    >
+      <Component />
+    </DefaultLayout>
   )
 }
 

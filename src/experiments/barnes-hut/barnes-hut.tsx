@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Simulation, type Preset } from './lib/simulation';
+import { type QuadTreeNode } from './lib/quadtree';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +36,12 @@ export default function BarnesHutSimulation() {
     const [showMetrics, setShowMetrics] = useState(false);
     const [showControls, setShowControls] = useState(true);
     const [selectedBodyIndex, setSelectedBodyIndex] = useState<number | null>(null);
+    const [stats, setStats] = useState({
+        activeBodies: 0,
+        stepCount: 0,
+        treeDepth: 0,
+        stepMs: 0
+    });
 
     const navigatePreset = useCallback((direction: 'prev' | 'next') => {
         const currentIndex = PRESETS.indexOf(currentPreset);
@@ -48,17 +55,41 @@ export default function BarnesHutSimulation() {
         setCurrentPreset(newPreset);
         if (simulationRef.current) {
             simulationRef.current.initializePreset(newPreset, bodyCount);
+            setStats({
+                activeBodies: simulationRef.current.getActiveBodies(),
+                stepCount: simulationRef.current.stepCount,
+                treeDepth: simulationRef.current.quadtree ? simulationRef.current.quadtree.getDepth() : 0,
+                stepMs: simulationRef.current.lastCalcTime
+            });
         }
     }, [currentPreset, bodyCount]);
 
     useEffect(() => {
         simulationRef.current = new Simulation();
         simulationRef.current.initializePreset(DEFAULT_PRESET, DEFAULT_BODY_COUNT);
+        setStats({
+            activeBodies: simulationRef.current.getActiveBodies(),
+            stepCount: simulationRef.current.stepCount,
+            treeDepth: simulationRef.current.quadtree ? simulationRef.current.quadtree.getDepth() : 0,
+            stepMs: simulationRef.current.lastCalcTime
+        });
         return () => {
             if (animationFrameRef.current) {
                 cancelAnimationFrame(animationFrameRef.current);
             }
         };
+    }, []);
+
+    const syncStats = useCallback(() => {
+        const simulation = simulationRef.current;
+        if (!simulation) return;
+
+        setStats({
+            activeBodies: simulation.getActiveBodies(),
+            stepCount: simulation.stepCount,
+            treeDepth: simulation.quadtree ? simulation.quadtree.getDepth() : 0,
+            stepMs: simulation.lastCalcTime
+        });
     }, []);
 
     const render = useCallback(() => {
@@ -81,8 +112,8 @@ export default function BarnesHutSimulation() {
         const scaleY = height / (simulation.domainMax - simulation.domainMin);
 
         if (showQuadtree && simulation.quadtree) {
-            let approximatedNodes: any[] = [];
-            let recursedNodes: any[] = [];
+            let approximatedNodes: QuadTreeNode[] = [];
+            let recursedNodes: QuadTreeNode[] = [];
             
             // If a body is selected, get traversal info
             if (selectedBodyIndex !== null && selectedBodyIndex < simulation.bodies.length) {
@@ -205,29 +236,30 @@ export default function BarnesHutSimulation() {
                 ctx.fill();
             }
         }
-    }, [showQuadtree, showTrails]);
-
-    const animate = useCallback(() => {
-        const simulation = simulationRef.current;
-        if (!simulation || !isRunning) return;
-
-        const startTime = performance.now();
-        simulation.step();
-        render();
-        
-        const now = performance.now();
-        const frameTime = now - startTime;
-        if (now - lastFpsUpdateRef.current > 250) {
-            setFps(Math.round(1000 / frameTime));
-            lastFpsUpdateRef.current = now;
-        }
-        
-        animationFrameRef.current = requestAnimationFrame(animate);
-    }, [isRunning, render]);
+    }, [selectedBodyIndex, showQuadtree, showTrails]);
 
     useEffect(() => {
         if (isRunning) {
-            animate();
+            const animateFrame = () => {
+                const simulation = simulationRef.current;
+                if (!simulation || !isRunning) return;
+
+                const startTime = performance.now();
+                simulation.step();
+                syncStats();
+                render();
+                
+                const now = performance.now();
+                const frameTime = now - startTime;
+                if (now - lastFpsUpdateRef.current > 250) {
+                    setFps(Math.round(1000 / frameTime));
+                    lastFpsUpdateRef.current = now;
+                }
+                
+                animationFrameRef.current = requestAnimationFrame(animateFrame);
+            };
+
+            animateFrame();
         } else if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current);
         }
@@ -236,7 +268,7 @@ export default function BarnesHutSimulation() {
                 cancelAnimationFrame(animationFrameRef.current);
             }
         };
-    }, [isRunning, animate]);
+    }, [isRunning, render, syncStats]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -315,6 +347,20 @@ export default function BarnesHutSimulation() {
         return () => canvas.removeEventListener('click', handleCanvasClick);
     }, [render]);
 
+    const handleReset = useCallback(() => {
+        const simulation = simulationRef.current;
+        if (!simulation) return;
+        
+        setIsRunning(false);
+        setBodyCount(DEFAULT_BODY_COUNT);
+        setTheta(DEFAULT_THETA);
+        setSpeedMultiplier(DEFAULT_SPEED);
+        setCurrentPreset(DEFAULT_PRESET);
+        simulation.initializePreset(DEFAULT_PRESET, DEFAULT_BODY_COUNT);
+        syncStats();
+        render();
+    }, [render, syncStats]);
+
     useEffect(() => {
         const handleKeyPress = (e: KeyboardEvent) => {
             if (e.code === 'Space') {
@@ -343,20 +389,7 @@ export default function BarnesHutSimulation() {
 
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [currentPreset, bodyCount, navigatePreset]);
-
-    const handleReset = () => {
-        const simulation = simulationRef.current;
-        if (!simulation) return;
-        
-        setIsRunning(false);
-        setBodyCount(DEFAULT_BODY_COUNT);
-        setTheta(DEFAULT_THETA);
-        setSpeedMultiplier(DEFAULT_SPEED);
-        setCurrentPreset(DEFAULT_PRESET);
-        simulation.initializePreset(DEFAULT_PRESET, DEFAULT_BODY_COUNT);
-        render();
-    };
+    }, [handleReset, navigatePreset]);
 
     const handlePresetChange = (preset: Preset) => {
         setCurrentPreset(preset);
@@ -365,6 +398,7 @@ export default function BarnesHutSimulation() {
         
         setIsRunning(false);
         simulation.initializePreset(preset, bodyCount);
+        syncStats();
         render();
     };
 
@@ -376,13 +410,9 @@ export default function BarnesHutSimulation() {
         
         setIsRunning(false);
         simulation.initializePreset(currentPreset, count);
+        syncStats();
         render();
     };
-
-    const activeBodies = simulationRef.current?.getActiveBodies() || 0;
-    const stepCount = simulationRef.current?.stepCount || 0;
-    const treeDepth = simulationRef.current?.quadtree ? simulationRef.current.quadtree.getDepth() : 0;
-    const stepMs = simulationRef.current?.lastCalcTime || 0;
 
     return (
         <div className="relative w-full h-screen bg-background overflow-hidden">
@@ -396,18 +426,18 @@ export default function BarnesHutSimulation() {
                     FPS: {fps}
                 </Badge>
                 <Badge variant="secondary" className="backdrop-blur-sm">
-                    Bodies: {activeBodies}
+                    Bodies: {stats.activeBodies}
                 </Badge>
                 <Badge variant="secondary" className="backdrop-blur-sm">
-                    Steps: {stepCount}
+                    Steps: {stats.stepCount}
                 </Badge>
                 {showMetrics && (
                     <>
                         <Badge variant="secondary" className="backdrop-blur-sm">
-                            Depth: {treeDepth}
+                            Depth: {stats.treeDepth}
                         </Badge>
                         <Badge variant="secondary" className="backdrop-blur-sm">
-                            Step: {stepMs.toFixed(2)}ms
+                            Step: {stats.stepMs.toFixed(2)}ms
                         </Badge>
                     </>
                 )}
@@ -481,7 +511,7 @@ export default function BarnesHutSimulation() {
                             <span className="font-semibold">Blue boxes (Other nodes):</span>
                         </div>
                         <p className="ml-6 text-xs opacity-90">
-                            Standard quadtree structure nodes not involved in this specific body's force calculation.
+                            Standard quadtree structure nodes not involved in this specific body&apos;s force calculation.
                         </p>
                     </div>
 
@@ -637,7 +667,7 @@ export default function BarnesHutSimulation() {
             </Card>
 
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                {!isRunning && simulationRef.current?.stepCount === 0 && (
+                {!isRunning && stats.stepCount === 0 && (
                     <h1 className="text-4xl font-bold text-muted-foreground/30 text-center">
                         Barnes-Hut N-Body Simulation
                     </h1>

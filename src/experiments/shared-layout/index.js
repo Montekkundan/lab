@@ -4,6 +4,7 @@ import { useOnClickOutside } from 'usehooks-ts';
 import { motion, AnimatePresence } from 'framer-motion';
 import s from './style.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const SharedLayout = () => {
   const [activeLink, setActiveLink] = useState(null);
@@ -186,7 +187,7 @@ const SharedLayout = () => {
               <div className={s.active_link}>
                 <div className={s.inner} ref={ref} style={{ borderRadius: 12 }}>
                   <div className={s.header}>
-                    <img
+                    <Image
                       height={56}
                       width={56}
                       alt='Link'
@@ -221,7 +222,7 @@ const SharedLayout = () => {
                 onClick={() => setActiveLink(link)}
                 style={{ borderRadius: 8 }}
               >
-                <img
+                <Image
                   height={56}
                   width={56}
                   alt='Link'

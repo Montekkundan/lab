@@ -122,6 +122,14 @@ export const experimentsConfig: ExperimentConfig[] = [
     description: 'Minimal MNIST ViT demo with patch token visualization.',
     tags: ['ai', 'ui', 'canvas']
   },
+  {
+    slug: 'nanovlm',
+    file: 'nanovlm/index.tsx',
+    createdAt: '2026-03-11',
+    title: 'NanoVLM',
+    description: 'Synthetic text-image retrieval playground with ONNX browser inference.',
+    tags: ['ai', 'onnx', 'canvas', 'ui']
+  },
   // {
   //   order: 14,
   //   slug: 'lstm-ghost-text',

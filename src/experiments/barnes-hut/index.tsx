@@ -4,7 +4,7 @@ import BarnesHutSimulation from './barnes-hut';
 import { NavigationLayout } from '@/components/layouts/navigation-layout';
 import { FC } from 'react';
 
-interface BarnesHutProps {}
+type BarnesHutProps = Record<string, unknown>;
 
 interface BarnesHutComponent extends FC<BarnesHutProps> {
     Layout?: FC<{ children: React.ReactNode; slug: string; title?: string; description?: React.ReactNode; background?: string }>;

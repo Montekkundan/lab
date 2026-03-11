@@ -33,13 +33,13 @@ const BrainFlowFieldExperiment: ExperimentComponent = () => {
   )
 }
 
-BrainFlowFieldExperiment.Layout = (props) => (
-  <R3FCanvasLayout
-    {...props}
-    camera={{ position: [0, 0, 3], fov: 45 }}
-    frameloop="demand"
-  />
+const BrainFlowFieldLayout: FC<R3FCanvasLayoutProps> = (props) => (
+  <R3FCanvasLayout {...props} camera={{ position: [0, 0, 3], fov: 45 }} frameloop="demand" />
 )
+
+BrainFlowFieldLayout.displayName = 'BrainFlowFieldLayout'
+
+BrainFlowFieldExperiment.Layout = BrainFlowFieldLayout
 BrainFlowFieldExperiment.Title = 'Brain Model'
 BrainFlowFieldExperiment.Description = 'Brain point cloud render'
 BrainFlowFieldExperiment.Tags = ['r3f', 'model']

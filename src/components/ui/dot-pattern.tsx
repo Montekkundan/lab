@@ -3,6 +3,11 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
+function pseudoRandom(seed: number) {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+}
+
 /**
  *  DotPattern Component Props
  *
@@ -100,8 +105,8 @@ export function DotPattern({
       return {
         x: col * width + cx + x,
         y: row * height + cy + y,
-        delay: Math.random() * 5,
-        duration: Math.random() * 3 + 2,
+        delay: pseudoRandom(i + 1) * 5,
+        duration: pseudoRandom(i + 101) * 3 + 2,
       };
     },
   );
