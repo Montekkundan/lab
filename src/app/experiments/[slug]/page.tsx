@@ -1,5 +1,11 @@
 import { notFound } from 'next/navigation'
-import { experimentsConfig, getExperimentBySlug, isExperimentPublished } from '@/lib/experiments.config'
+import { ExperimentDock } from '@/components/experiment-dock'
+import {
+  experimentsConfig,
+  getExperimentBySlug,
+  getPublishedExperimentNavItems,
+  isExperimentPublished,
+} from '@/lib/experiments.config'
 import ExperimentClient from './experiment-client'
 
 export async function generateStaticParams() {
@@ -20,5 +26,10 @@ export default async function ExperimentPage({
     notFound()
   }
 
-  return <ExperimentClient slug={slug} />
+  return (
+    <>
+      <ExperimentClient slug={slug} />
+      <ExperimentDock currentSlug={slug} items={getPublishedExperimentNavItems()} />
+    </>
+  )
 }

@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { AppTopBar } from "@/components/app-top-bar"
+import { ExperimentDock } from "@/components/experiment-dock"
 import { getAllExperiments } from "@/lib/experiments.server"
 import styles from "./page.module.css"
 
@@ -17,6 +18,11 @@ const parseLocalDate = (isoDate: string) => {
 
 export default async function Home() {
   const experiments = await getAllExperiments()
+  const dockItems = experiments.map((experiment) => ({
+    href: experiment.href || `/experiments/${experiment.slug}`,
+    slug: experiment.slug,
+    title: experiment.title || experiment.slug,
+  }))
 
   return (
     <>
@@ -82,6 +88,7 @@ export default async function Home() {
           ))}
         </div>
       </main>
+      <ExperimentDock items={dockItems} />
     </>
   )
 }

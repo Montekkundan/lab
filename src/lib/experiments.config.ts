@@ -10,6 +10,12 @@ export type ExperimentConfig = {
   og?: string;
 };
 
+export type ExperimentNavItem = {
+  href: string;
+  slug: string;
+  title: string;
+};
+
 export const experimentsConfig: ExperimentConfig[] = [
   {
     slug: 'multilanguage',
@@ -203,6 +209,19 @@ export const getExperimentDisplayTitle = (slug: string) => {
     .replace(/-/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase())
 }
+
+export const getPublishedExperimentNavItems = (): ExperimentNavItem[] =>
+  experimentsConfig
+    .filter(isExperimentPublished)
+    .toSorted(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+    .map((experiment) => ({
+      href: `/experiments/${experiment.slug}`,
+      slug: experiment.slug,
+      title: experiment.title || getExperimentDisplayTitle(experiment.slug),
+    }))
 
 export const getExperimentImportPath = (experiment: ExperimentConfig) => {
   const path = experiment.file;
