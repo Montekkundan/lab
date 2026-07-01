@@ -128,7 +128,8 @@ export const experimentsConfig: ExperimentConfig[] = [
     createdAt: '2026-03-11',
     title: 'NanoVLM',
     description: 'Synthetic text-image retrieval playground with ONNX browser inference.',
-    tags: ['ai', 'onnx', 'canvas', 'ui']
+    tags: ['ai', 'onnx', 'canvas', 'ui'],
+    published: false
   },
   {
     slug: 'threejs-water',
@@ -137,7 +138,8 @@ export const experimentsConfig: ExperimentConfig[] = [
     title: 'Ripple Source Inversion',
     description: 'Can a t=15 ripple pattern reveal where a stone hit a still pond at t=1?',
     tags: ['webgl', 'three.js', 'inverse problem'],
-    background: 'none'
+    background: 'none',
+    published: false
   },
   {
     slug: 'brain2scene',
@@ -146,7 +148,8 @@ export const experimentsConfig: ExperimentConfig[] = [
     title: 'Brain2Scene',
     description: 'Held-out Gallant shortclips fMRI to semantic scene retrieval.',
     tags: ['ai', 'neuro', 'fmri'],
-    background: 'white'
+    background: 'white',
+    published: false
   },
   {
     slug: 'doctutor',
@@ -155,7 +158,8 @@ export const experimentsConfig: ExperimentConfig[] = [
     title: 'DocTutor',
     description: 'Tiny Transformer encoder retrieval chatbot over eight TensorTonic lessons.',
     tags: ['ai', 'onnx', 'transformer', 'ui'],
-    background: 'white'
+    background: 'white',
+    published: false
   },
   // {
   //   order: 14,
