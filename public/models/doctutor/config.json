@@ -1,0 +1,17 @@
+{
+  "max_length": 160,
+  "d_model": 64,
+  "num_heads": 4,
+  "d_ff": 128,
+  "num_layers": 2,
+  "vocab_size": 2329,
+  "temperature": 0.08,
+  "special_tokens": [
+    "<PAD>",
+    "<UNK>",
+    "<BOS>",
+    "<EOS>"
+  ],
+  "model_task": "question_chunk_retrieval",
+  "corpus": "eight TensorTonic Transformer lesson markdown files"
+}

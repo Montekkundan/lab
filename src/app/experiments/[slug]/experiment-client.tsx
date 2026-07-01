@@ -1,9 +1,9 @@
 'use client'
 
-import { Suspense, use, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { R3FCanvasLayout } from '@/components/layouts/r3f-layput'
 import { DefaultLayout } from '@/components/layouts/default-layout'
-import { experimentImportMap, type ExperimentLoader, type ExperimentModule } from '@/lib/experiments.import-map'
+import { experimentImportMap, type ExperimentLoader } from '@/lib/experiments.import-map'
 
 type Module<P> = {
   default: P
@@ -49,10 +49,69 @@ type ExperimentClientContentProps = {
   loader: ExperimentLoader
 }
 
+type LoadedExperiment = {
+  slug: string
+  module: Module<Component> | null
+  error: Error | null
+}
+
+function ExperimentLoading() {
+  return (
+    <div className="p-8 flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
+    </div>
+  )
+}
+
 function ExperimentClientContent({ slug, loader }: ExperimentClientContentProps) {
-  const modulePromise = useMemo(() => loader() as Promise<ExperimentModule>, [loader])
-  const Module = use(modulePromise) as Module<Component>
-  const Component = Module.default
+  const [loadedExperiment, setLoadedExperiment] = useState<LoadedExperiment | null>(null)
+
+  useEffect(() => {
+    let isMounted = true
+
+    loader()
+      .then((loadedModule) => {
+        if (isMounted) {
+          setLoadedExperiment({
+            slug,
+            module: loadedModule as Module<Component>,
+            error: null
+          })
+        }
+      })
+      .catch((loadError) => {
+        if (isMounted) {
+          setLoadedExperiment({
+            slug,
+            module: null,
+            error: loadError instanceof Error ? loadError : new Error('Failed to load experiment')
+          })
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [loader, slug])
+
+  if (!loadedExperiment || loadedExperiment.slug !== slug) {
+    return <ExperimentLoading />
+  }
+
+  if (loadedExperiment.error) {
+    return (
+      <div className="p-8 text-center">
+        <h1 className="text-3xl font-bold mb-4">Experiment Failed To Load</h1>
+        <p>{loadedExperiment.error.message}</p>
+      </div>
+    )
+  }
+
+  if (!loadedExperiment.module) {
+    return <ExperimentLoading />
+  }
+
+  const Component = loadedExperiment.module.default
 
   if (Component?.getLayout) {
     const Layout = Component.getLayout
@@ -104,6 +163,7 @@ function ExperimentClientContent({ slug, loader }: ExperimentClientContentProps)
       title={Component.Title}
       description={Component.Description}
       notebookPath={Component.Notebook}
+      background={Component.background}
     >
       <Component />
     </DefaultLayout>
@@ -123,14 +183,6 @@ export default function ExperimentClient({ slug }: ExperimentClientProps) {
   }
 
   return (
-    <Suspense
-      fallback={
-        <div className="p-8 flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      }
-    >
-      <ExperimentClientContent slug={slug} loader={loader} />
-    </Suspense>
+    <ExperimentClientContent slug={slug} loader={loader} />
   )
 }

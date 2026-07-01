@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process'
 import { existsSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { join } from 'node:path'
 import { promisify } from 'node:util'
 
 const execFileAsync = promisify(execFile)
@@ -9,7 +9,7 @@ const DEFAULT_TIMEOUT_MS = 2_000
 const DEFAULT_MAX_BUFFER = 1024 * 64
 
 export async function runMonty(code: string) {
-  const binaryPath = process.env.MONTY_BIN_PATH || resolve(process.cwd(), 'bin/monty')
+  const binaryPath = join(process.cwd(), 'bin', 'monty')
 
   if (!existsSync(binaryPath)) {
     throw new Error(`Monty binary not found at ${binaryPath}`)

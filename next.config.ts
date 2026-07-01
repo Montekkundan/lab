@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  allowedDevOrigins: ['127.0.0.1'],
   cacheComponents: true,
+  partialPrefetching: true,
   webpack: (config) => {
     // Raw-loader for .glsl files
     config.module.rules.push({
@@ -49,6 +51,24 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: '/experiments/brain2scene/:file(.*\\.json)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=300, stale-while-revalidate=3600',
+          },
+        ],
+      },
+      {
+        source: '/experiments/brain2scene/thumbnails/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ]
   },
 
@@ -64,7 +84,10 @@ const nextConfig: NextConfig = {
 
   turbopack: {
     rules: {
-      '*.glsl': ['file_text'],
+      '*.glsl': {
+        loaders: ['raw-loader'],
+        as: '*.js',
+      },
     }
   }
 };

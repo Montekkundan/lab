@@ -1,0 +1,340 @@
+{
+  "generated_at": "2026-06-07T23:17:51+00:00",
+  "corpus": {
+    "lessons": 8,
+    "chunks": 254,
+    "vocab_size": 2329,
+    "embedding_dim": 64,
+    "model_task": "question_chunk_retrieval"
+  },
+  "eval_set": {
+    "cases": 60,
+    "in_domain": 48,
+    "out_of_domain": 12
+  },
+  "methods": {
+    "lexical": {
+      "lesson_recall_at_1": 0.75,
+      "lesson_recall_at_3": 0.875,
+      "lesson_recall_at_5": 0.9583,
+      "chunk_recall_at_1": 0.2917,
+      "chunk_recall_at_3": 0.4792,
+      "chunk_recall_at_5": 0.6875,
+      "lesson_mrr": 0.8269,
+      "chunk_mrr": 0.4534,
+      "avg_ms_per_query": 0.108,
+      "top1_lesson_misses": [
+        {
+          "id": "l1-padding-mask",
+          "question": "why does padding need to be ignored later by the model",
+          "expected_lesson": 1,
+          "top_lesson": 5,
+          "top_chunk": "L05-139",
+          "top_score": 0.2182
+        },
+        {
+          "id": "l2-scale-sqrt",
+          "question": "why do embeddings get multiplied by sqrt d model",
+          "expected_lesson": 2,
+          "top_lesson": 5,
+          "top_chunk": "L05-139",
+          "top_score": 0.4364
+        },
+        {
+          "id": "l2-bad-float-ids",
+          "question": "why can token ids not be floating point numbers",
+          "expected_lesson": 2,
+          "top_lesson": 1,
+          "top_chunk": "L01-005",
+          "top_score": 0.1734
+        },
+        {
+          "id": "l3-no-recurrence",
+          "question": "how does a transformer know token order without recurrence",
+          "expected_lesson": 3,
+          "top_lesson": 8,
+          "top_chunk": "L08-231",
+          "top_score": 0.1771
+        },
+        {
+          "id": "l4-score-shape",
+          "question": "what shape are attention score matrices before softmax",
+          "expected_lesson": 4,
+          "top_lesson": 5,
+          "top_chunk": "L05-127",
+          "top_score": 0.3203
+        },
+        {
+          "id": "l6-position-wise",
+          "question": "what does position wise feed forward mean",
+          "expected_lesson": 6,
+          "top_lesson": 3,
+          "top_chunk": "L03-063",
+          "top_score": 0.1319
+        },
+        {
+          "id": "l6-ffn-vs-attention",
+          "question": "how is the ffn different from attention",
+          "expected_lesson": 6,
+          "top_lesson": 8,
+          "top_chunk": "L08-233",
+          "top_score": 0.2981
+        },
+        {
+          "id": "l6-shared-weights",
+          "question": "does the ffn use the same weights at every token position",
+          "expected_lesson": 6,
+          "top_lesson": 8,
+          "top_chunk": "L08-237",
+          "top_score": 0.3128
+        }
+      ]
+    },
+    "tfidf": {
+      "lesson_recall_at_1": 0.7083,
+      "lesson_recall_at_3": 0.9375,
+      "lesson_recall_at_5": 0.9792,
+      "chunk_recall_at_1": 0.375,
+      "chunk_recall_at_3": 0.6667,
+      "chunk_recall_at_5": 0.7708,
+      "lesson_mrr": 0.8299,
+      "chunk_mrr": 0.5561,
+      "avg_ms_per_query": 0.222,
+      "top1_lesson_misses": [
+        {
+          "id": "l1-padding-mask",
+          "question": "why does padding need to be ignored later by the model",
+          "expected_lesson": 1,
+          "top_lesson": 2,
+          "top_chunk": "L02-043",
+          "top_score": 0.1273
+        },
+        {
+          "id": "l2-token-ids-vectors",
+          "question": "how do token ids become vectors",
+          "expected_lesson": 2,
+          "top_lesson": 4,
+          "top_chunk": "L04-100",
+          "top_score": 0.1758
+        },
+        {
+          "id": "l2-scale-sqrt",
+          "question": "why do embeddings get multiplied by sqrt d model",
+          "expected_lesson": 2,
+          "top_lesson": 5,
+          "top_chunk": "L05-139",
+          "top_score": 0.2195
+        },
+        {
+          "id": "l2-bad-float-ids",
+          "question": "why can token ids not be floating point numbers",
+          "expected_lesson": 2,
+          "top_lesson": 1,
+          "top_chunk": "L01-015",
+          "top_score": 0.1587
+        },
+        {
+          "id": "l4-mask",
+          "question": "how does the attention mask stop padding tokens from being used",
+          "expected_lesson": 4,
+          "top_lesson": 1,
+          "top_chunk": "L01-013",
+          "top_score": 0.14
+        },
+        {
+          "id": "l4-score-shape",
+          "question": "what shape are attention score matrices before softmax",
+          "expected_lesson": 4,
+          "top_lesson": 8,
+          "top_chunk": "L08-227",
+          "top_score": 0.2431
+        },
+        {
+          "id": "l5-split-qkv",
+          "question": "how do we split q k and v into heads",
+          "expected_lesson": 5,
+          "top_lesson": 4,
+          "top_chunk": "L04-093",
+          "top_score": 0.4585
+        },
+        {
+          "id": "l5-different-relations",
+          "question": "how can different heads learn different relationships",
+          "expected_lesson": 5,
+          "top_lesson": 6,
+          "top_chunk": "L06-186",
+          "top_score": 0.4169
+        }
+      ]
+    },
+    "tiny_encoder": {
+      "lesson_recall_at_1": 0.7708,
+      "lesson_recall_at_3": 0.8542,
+      "lesson_recall_at_5": 0.8542,
+      "chunk_recall_at_1": 0.3542,
+      "chunk_recall_at_3": 0.4167,
+      "chunk_recall_at_5": 0.4792,
+      "lesson_mrr": 0.8194,
+      "chunk_mrr": 0.4167,
+      "avg_ms_per_query": 0.777,
+      "top1_lesson_misses": [
+        {
+          "id": "l1-padding-mask",
+          "question": "why does padding need to be ignored later by the model",
+          "expected_lesson": 1,
+          "top_lesson": 2,
+          "top_chunk": "L02-043",
+          "top_score": 0.6485
+        },
+        {
+          "id": "l2-weight-tying",
+          "question": "what is weight tying in the transformer embedding layer",
+          "expected_lesson": 2,
+          "top_lesson": 8,
+          "top_chunk": "L08-238",
+          "top_score": 0.5907
+        },
+        {
+          "id": "l2-bad-float-ids",
+          "question": "why can token ids not be floating point numbers",
+          "expected_lesson": 2,
+          "top_lesson": 3,
+          "top_chunk": "L03-065",
+          "top_score": 0.6048
+        },
+        {
+          "id": "l3-no-recurrence",
+          "question": "how does a transformer know token order without recurrence",
+          "expected_lesson": 3,
+          "top_lesson": 4,
+          "top_chunk": "L04-108",
+          "top_score": 0.6026
+        },
+        {
+          "id": "l4-mask",
+          "question": "how does the attention mask stop padding tokens from being used",
+          "expected_lesson": 4,
+          "top_lesson": 1,
+          "top_chunk": "L01-002",
+          "top_score": 0.5843
+        },
+        {
+          "id": "l5-concat-project",
+          "question": "why project after concatenating attention heads",
+          "expected_lesson": 5,
+          "top_lesson": 6,
+          "top_chunk": "L06-194",
+          "top_score": 0.5494
+        },
+        {
+          "id": "l5-different-relations",
+          "question": "how can different heads learn different relationships",
+          "expected_lesson": 5,
+          "top_lesson": 7,
+          "top_chunk": "L07-219",
+          "top_score": 0.5355
+        },
+        {
+          "id": "l5-head-dimension",
+          "question": "why must d model divide evenly across attention heads",
+          "expected_lesson": 5,
+          "top_lesson": 2,
+          "top_chunk": "L02-035",
+          "top_score": 0.6932
+        }
+      ]
+    },
+    "hybrid": {
+      "lesson_recall_at_1": 0.7917,
+      "lesson_recall_at_3": 0.875,
+      "lesson_recall_at_5": 0.8958,
+      "chunk_recall_at_1": 0.3958,
+      "chunk_recall_at_3": 0.5417,
+      "chunk_recall_at_5": 0.5417,
+      "lesson_mrr": 0.8436,
+      "chunk_mrr": 0.4911,
+      "avg_ms_per_query": 0.09,
+      "top1_lesson_misses": [
+        {
+          "id": "l1-padding-mask",
+          "question": "why does padding need to be ignored later by the model",
+          "expected_lesson": 1,
+          "top_lesson": 2,
+          "top_chunk": "L02-043",
+          "top_score": 0.7117
+        },
+        {
+          "id": "l2-bad-float-ids",
+          "question": "why can token ids not be floating point numbers",
+          "expected_lesson": 2,
+          "top_lesson": 3,
+          "top_chunk": "L03-065",
+          "top_score": 0.496
+        },
+        {
+          "id": "l3-no-recurrence",
+          "question": "how does a transformer know token order without recurrence",
+          "expected_lesson": 3,
+          "top_lesson": 1,
+          "top_chunk": "L01-006",
+          "top_score": 0.5299
+        },
+        {
+          "id": "l4-mask",
+          "question": "how does the attention mask stop padding tokens from being used",
+          "expected_lesson": 4,
+          "top_lesson": 1,
+          "top_chunk": "L01-002",
+          "top_score": 0.5897
+        },
+        {
+          "id": "l5-concat-project",
+          "question": "why project after concatenating attention heads",
+          "expected_lesson": 5,
+          "top_lesson": 6,
+          "top_chunk": "L06-194",
+          "top_score": 0.5346
+        },
+        {
+          "id": "l5-different-relations",
+          "question": "how can different heads learn different relationships",
+          "expected_lesson": 5,
+          "top_lesson": 6,
+          "top_chunk": "L06-186",
+          "top_score": 0.6176
+        },
+        {
+          "id": "l5-head-dimension",
+          "question": "why must d model divide evenly across attention heads",
+          "expected_lesson": 5,
+          "top_lesson": 2,
+          "top_chunk": "L02-035",
+          "top_score": 0.614
+        },
+        {
+          "id": "l6-position-wise",
+          "question": "what does position wise feed forward mean",
+          "expected_lesson": 6,
+          "top_lesson": 7,
+          "top_chunk": "L07-204",
+          "top_score": 0.5492
+        }
+      ]
+    }
+  },
+  "refusal": {
+    "threshold": 0.32,
+    "precision": 1.0,
+    "recall": 1.0,
+    "ood_refusal_rate": 1.0,
+    "in_domain_false_refusal_rate": 0.0,
+    "confusion": {
+      "true_positive_refusals": 12,
+      "false_positive_refusals": 0,
+      "true_negative_answers": 48,
+      "false_negative_answers": 0
+    },
+    "false_negative_examples": [],
+    "false_positive_examples": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "feature_names": [
+    "motion_energy",
+    "videomae_tr_windows"
+  ],
+  "weights": null,
+  "normalization": "raw",
+  "retrieval_top1": 0.12962962962962962,
+  "retrieval_topk": 0.3,
+  "n_test": 270,
+  "n_voxels": 512,
+  "top_k": 5
+}

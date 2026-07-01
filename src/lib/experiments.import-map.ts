@@ -24,5 +24,8 @@ export const experimentImportMap = {
   'barnes-hut': () => import('@/experiments/barnes-hut'),
   'vit-mnist-token-grid': () => import('@/experiments/vit-mnist-token-grid'),
   'nanovlm': () => import('@/experiments/nanovlm'),
+  'threejs-water': () => import('@/experiments/threejs-water'),
+  'brain2scene': () => import('@/experiments/brain2scene'),
+  'doctutor': () => import('@/experiments/doctutor'),
   'monty-interperator': () => import('@/experiments/monty-interperator'),
 } satisfies Record<string, ExperimentLoader>

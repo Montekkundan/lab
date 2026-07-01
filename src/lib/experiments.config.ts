@@ -130,6 +130,33 @@ export const experimentsConfig: ExperimentConfig[] = [
     description: 'Synthetic text-image retrieval playground with ONNX browser inference.',
     tags: ['ai', 'onnx', 'canvas', 'ui']
   },
+  {
+    slug: 'threejs-water',
+    file: 'threejs-water/index.tsx',
+    createdAt: '2026-05-25',
+    title: 'Ripple Source Inversion',
+    description: 'Can a t=15 ripple pattern reveal where a stone hit a still pond at t=1?',
+    tags: ['webgl', 'three.js', 'inverse problem'],
+    background: 'none'
+  },
+  {
+    slug: 'brain2scene',
+    file: 'brain2scene/index.tsx',
+    createdAt: '2026-05-27',
+    title: 'Brain2Scene',
+    description: 'Held-out Gallant shortclips fMRI to semantic scene retrieval.',
+    tags: ['ai', 'neuro', 'fmri'],
+    background: 'white'
+  },
+  {
+    slug: 'doctutor',
+    file: 'doctutor/index.tsx',
+    createdAt: '2026-06-07',
+    title: 'DocTutor',
+    description: 'Tiny Transformer encoder retrieval chatbot over eight TensorTonic lessons.',
+    tags: ['ai', 'onnx', 'transformer', 'ui'],
+    background: 'white'
+  },
   // {
   //   order: 14,
   //   slug: 'lstm-ghost-text',
